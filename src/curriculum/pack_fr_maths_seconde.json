@@ -1,0 +1,58 @@
+{
+  "country": "fr",
+  "subject": "maths",
+  "level": "seconde",
+  "source": "Sesamath CC-BY-SA — Programme officiel Mathematiques Seconde (Education Nationale FR)",
+  "chapters": [
+    {
+      "id": "nombres",
+      "title": "Nombres et calculs",
+      "competencies": [
+        {"id": "nombres.ensembles", "title": "Ensembles de nombres", "bloom_level": 1, "pisa_domain": "quantity"},
+        {"id": "nombres.calcul_litteral", "title": "Calcul litteral", "bloom_level": 3, "pisa_domain": "quantity"},
+        {"id": "nombres.equations", "title": "Equations et inequations", "bloom_level": 3, "pisa_domain": "quantity"},
+        {"id": "nombres.intervalles", "title": "Intervalles et notations", "bloom_level": 2, "pisa_domain": "quantity"},
+        {"id": "nombres.puissances", "title": "Puissances et racines carrees", "bloom_level": 2, "pisa_domain": "quantity"}
+      ]
+    },
+    {
+      "id": "geometrie",
+      "title": "Geometrie",
+      "competencies": [
+        {"id": "geometrie.repere", "title": "Repere cartesien", "bloom_level": 2, "pisa_domain": "space_and_shape"},
+        {"id": "geometrie.vecteurs", "title": "Vecteurs", "bloom_level": 3, "pisa_domain": "space_and_shape"},
+        {"id": "geometrie.droites", "title": "Equations de droites", "bloom_level": 4, "pisa_domain": "space_and_shape"},
+        {"id": "geometrie.configurations", "title": "Configurations geometriques", "bloom_level": 3, "pisa_domain": "space_and_shape"}
+      ]
+    },
+    {
+      "id": "fonctions",
+      "title": "Fonctions",
+      "competencies": [
+        {"id": "fonctions.notion", "title": "Notion de fonction", "bloom_level": 2, "pisa_domain": "change_and_relationships"},
+        {"id": "fonctions.variations", "title": "Variations et extremums", "bloom_level": 3, "pisa_domain": "change_and_relationships"},
+        {"id": "fonctions.affines", "title": "Fonctions affines", "bloom_level": 3, "pisa_domain": "change_and_relationships"},
+        {"id": "fonctions.carre_inverse", "title": "Fonctions carre et inverse", "bloom_level": 3, "pisa_domain": "change_and_relationships"},
+        {"id": "fonctions.resolution_graphique", "title": "Resolution graphique", "bloom_level": 4, "pisa_domain": "change_and_relationships"}
+      ]
+    },
+    {
+      "id": "statistiques",
+      "title": "Statistiques et probabilites",
+      "competencies": [
+        {"id": "statistiques.descriptive", "title": "Statistiques descriptives", "bloom_level": 2, "pisa_domain": "uncertainty_and_data"},
+        {"id": "statistiques.echantillonnage", "title": "Echantillonnage et fluctuation", "bloom_level": 4, "pisa_domain": "uncertainty_and_data"},
+        {"id": "statistiques.probabilites", "title": "Probabilites elementaires", "bloom_level": 3, "pisa_domain": "uncertainty_and_data"}
+      ]
+    },
+    {
+      "id": "algorithmique",
+      "title": "Algorithmique et programmation",
+      "competencies": [
+        {"id": "algorithmique.variables", "title": "Variables et affectations", "bloom_level": 2, "pisa_domain": "change_and_relationships"},
+        {"id": "algorithmique.boucles", "title": "Boucles et conditions", "bloom_level": 3, "pisa_domain": "change_and_relationships"},
+        {"id": "algorithmique.fonctions_python", "title": "Fonctions en Python", "bloom_level": 4, "pisa_domain": "change_and_relationships"}
+      ]
+    }
+  ]
+}
