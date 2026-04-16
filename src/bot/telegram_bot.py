@@ -19,7 +19,7 @@ from src.bot.handlers import (
 
 def main() -> None:
     """Build the Telegram application, register handlers, and start polling."""
-    load_dotenv()
+    load_dotenv(override=True)
 
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     if not token:
