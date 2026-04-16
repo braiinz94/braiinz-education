@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import random
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from src.base_agent import BaseEducAgent
@@ -13,7 +13,7 @@ from src.student_profile import StudentProfile
 
 
 def _now_utc() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 # Rating multipliers: 1=Again, 2=Hard, 3=Good, 4=Easy
@@ -45,11 +45,11 @@ class Flashcard:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Flashcard":
+    def from_dict(cls, data: dict) -> Flashcard:
         next_review = datetime.fromisoformat(data["next_review"])
         # Ensure timezone-aware
         if next_review.tzinfo is None:
-            next_review = next_review.replace(tzinfo=timezone.utc)
+            next_review = next_review.replace(tzinfo=UTC)
         return cls(
             card_id=data["card_id"],
             competency_id=data["competency_id"],
@@ -112,7 +112,7 @@ class FlashcardDeck:
         os.replace(tmp, path)
 
     @classmethod
-    def load(cls, student_id: str, data_dir: Path | str) -> "FlashcardDeck":
+    def load(cls, student_id: str, data_dir: Path | str) -> FlashcardDeck:
         """Load a deck from disk. Returns empty deck if file not found."""
         path = Path(data_dir) / "flashcards" / f"{student_id}.json"
         deck = cls(student_id=student_id)

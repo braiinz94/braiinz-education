@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from src.student_profile import ProfileManager, StudentProfile
 
 

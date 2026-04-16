@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -29,11 +29,11 @@ def tmp_data_dir(tmp_path: Path) -> Path:
 
 
 def _past(seconds: int = 60) -> datetime:
-    return datetime.now(timezone.utc) - timedelta(seconds=seconds)
+    return datetime.now(UTC) - timedelta(seconds=seconds)
 
 
 def _future(hours: int = 24) -> datetime:
-    return datetime.now(timezone.utc) + timedelta(hours=hours)
+    return datetime.now(UTC) + timedelta(hours=hours)
 
 
 def test_agent_id(agent: CoachPratique) -> None:
@@ -54,7 +54,7 @@ def test_create_flashcard() -> None:
     assert card.card_id == "c1"
     assert card.review_count == 0
     assert card.interval_days == 1.0
-    assert card.next_review <= datetime.now(timezone.utc)
+    assert card.next_review <= datetime.now(UTC)
 
 
 def test_flashcard_to_dict_roundtrip() -> None:
@@ -143,7 +143,7 @@ def test_review_card_updates_review_count() -> None:
 
 def test_review_card_pushes_next_review() -> None:
     deck = FlashcardDeck(student_id="s3")
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     card = Flashcard(card_id="c1", competency_id="nombres.equations", question="Q", answer="A",
                      next_review=_past())
     deck.add_card(card)

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from src.agents.coach_pratique import Flashcard, FlashcardDeck
 from src.agents.diagnostiqueur import Diagnostiqueur
 from src.agents.tuteur_socratique import Phase, TuteurSocratique

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import re
 
-
 _CATEGORIES: dict[str, list[str]] = {
     "politique": [
         r"pr[eé]sident",

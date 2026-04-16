@@ -81,7 +81,7 @@ class TuteurSocratique(BaseEducAgent):
             f"Zone Proximale de Developpement (ZPD) : {competency_id} est dans la ZPD "
             f"— l'eleve peut progresser avec aide."
             if competency_id in zpd
-            else f"Competence hors ZPD (maitrise suffisante)."
+            else "Competence hors ZPD (maitrise suffisante)."
         )
 
         return (

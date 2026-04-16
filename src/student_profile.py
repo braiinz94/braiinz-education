@@ -5,13 +5,13 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 @dataclass
@@ -45,7 +45,7 @@ class StudentProfile:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "StudentProfile":
+    def from_dict(cls, data: dict[str, Any]) -> StudentProfile:
         return cls(
             student_id=data["student_id"],
             display_name=data["display_name"],
