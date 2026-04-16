@@ -134,13 +134,18 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await update.message.reply_text(response)
         return
 
-    # Route by mode
-    mode = context.user_data.get("mode", "")
+    # Route by mode — default to tuteur (most common use case)
+    mode = context.user_data.get("mode", "tuteur")
     if mode == "tuteur":
         response = _tuteur.process(profile, text)
+    elif mode == "flashcard":
+        response = (
+            f"Ta reponse est notee, {profile.display_name}. Tape /flashcard pour la prochaine carte, "
+            "ou une autre commande pour changer d'activite."
+        )
     else:
         response = (
-            f"Bonjour {profile.display_name} ! Utilise une commande pour commencer :\n"
+            f"Bonjour {profile.display_name} ! Utilise une commande :\n"
             "  /diagnostic — Evaluer tes competences\n"
             "  /tuteur — Tutorat socratique\n"
             "  /flashcard — Flashcards\n"

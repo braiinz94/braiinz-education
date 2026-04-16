@@ -46,9 +46,27 @@ class TuteurSocratique(BaseEducAgent):
         )
 
     def handle(self, student: StudentProfile, user_message: str) -> str:
-        return (
-            f"[Tuteur Socratique] Message recu de {student.display_name}: {user_message}"
+        """Real LLM call — build context from student profile, call Sonnet."""
+        context_lines = [f"ELEVE : {student.display_name} (niveau {student.level})"]
+        if student.competencies:
+            context_lines.append("COMPETENCES ACTUELLES :")
+            for cid, data in student.competencies.items():
+                context_lines.append(
+                    f"  {cid}: maitrise {data['mastery']:.0%} (PISA {data['pisa_level']})"
+                )
+        else:
+            context_lines.append("Aucun diagnostic realise — reste general.")
+        context = "\n".join(context_lines)
+
+        system = f"{self.full_system_prompt()}\n\n{context}"
+
+        result = self.llm.call(
+            user_message,
+            tier="standard",
+            system=system,
+            response_format="text",
         )
+        return str(result) if result else "Hmm, je n'ai pas de reponse a te proposer. Reformule ta question ?"
 
     def determine_phase(self, mastery: float) -> Phase:
         """Determine the pedagogical phase from the mastery level."""
