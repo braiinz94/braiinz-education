@@ -51,7 +51,8 @@ def test_creates_new_profile(mock_update, mock_context):
 
     assert profile.student_id == "tg-12345"
     assert profile.display_name == "Younes"
-    assert profile.level == "seconde"
+    # Level is empty string on creation; user picks it via inline keyboard on /start
+    assert profile.level == ""
     assert mock_context.user_data["profile"] is profile
 
 

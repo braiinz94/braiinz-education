@@ -47,15 +47,25 @@ class TuteurSocratique(BaseEducAgent):
 
     def handle(self, student: StudentProfile, user_message: str) -> str:
         """Real LLM call — build context from student profile, call Sonnet."""
-        context_lines = [f"ELEVE : {student.display_name} (niveau {student.level})"]
+        level = student.level or "non defini"
+        context_lines = [
+            f"ELEVE : {student.display_name}",
+            f"NIVEAU SCOLAIRE : {level}",
+            "",
+            "ADAPTATION AU NIVEAU (obligatoire) :",
+            "- Adapte le vocabulaire, les exemples et la complexite des questions au niveau de l'eleve.",
+            "- Pour un collegien (6e a 3e) : utilise des images concretes, pas de formalisme excessif.",
+            "- Pour un lyceen (2nde a Terminale) : tu peux introduire des notions plus abstraites.",
+            "- Pour l'enseignement superieur : rigueur mathematique, formalisme, demonstrations.",
+            "- Si le niveau n'est pas defini, reste simple et demande en douceur le niveau.",
+        ]
         if student.competencies:
+            context_lines.append("")
             context_lines.append("COMPETENCES ACTUELLES :")
             for cid, data in student.competencies.items():
                 context_lines.append(
                     f"  {cid}: maitrise {data['mastery']:.0%} (PISA {data['pisa_level']})"
                 )
-        else:
-            context_lines.append("Aucun diagnostic realise — reste general.")
         context = "\n".join(context_lines)
 
         system = f"{self.full_system_prompt()}\n\n{context}"

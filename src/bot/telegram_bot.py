@@ -5,12 +5,20 @@ from __future__ import annotations
 import os
 
 from dotenv import load_dotenv
-from telegram.ext import Application, CommandHandler, MessageHandler, filters
+from telegram.ext import (
+    Application,
+    CallbackQueryHandler,
+    CommandHandler,
+    MessageHandler,
+    filters,
+)
 
 from src.bot.handlers import (
     diagnostic_handler,
     flashcard_handler,
     message_handler,
+    niveau_callback,
+    niveau_handler,
     profil_handler,
     start_handler,
     tuteur_handler,
@@ -36,6 +44,10 @@ def main() -> None:
     app.add_handler(CommandHandler("tuteur", tuteur_handler))
     app.add_handler(CommandHandler("flashcard", flashcard_handler))
     app.add_handler(CommandHandler("profil", profil_handler))
+    app.add_handler(CommandHandler("niveau", niveau_handler))
+
+    # Inline keyboard callbacks (level selection)
+    app.add_handler(CallbackQueryHandler(niveau_callback, pattern=r"^niveau:"))
 
     # Message handler for all text messages
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
