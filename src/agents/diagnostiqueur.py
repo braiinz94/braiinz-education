@@ -116,6 +116,7 @@ class Diagnostiqueur(BaseEducAgent):
                 result[cid] = {
                     "mastery": mastery,
                     "pisa_level": self.mastery_to_pisa(mastery),
+                    "title": comp["title"],
                 }
             break
 
