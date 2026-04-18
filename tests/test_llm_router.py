@@ -86,3 +86,73 @@ class TestLLMRouterCall:
         assert router.total_tokens_in == 15
         assert router.total_tokens_out == 30
         assert router.total_calls == 1
+
+
+# ---------------------------------------------------------------------------
+# TestProviderSwitching — Bedrock EU compliance (Schrems II)
+# ---------------------------------------------------------------------------
+
+
+class TestProviderSwitching:
+    def test_default_provider_is_anthropic_direct(self, monkeypatch, mock_anthropic_client):
+        """Without LLM_PROVIDER env, default is direct Anthropic API."""
+        monkeypatch.delenv("LLM_PROVIDER", raising=False)
+        router = LLMRouter("test-agent")
+        router.call("hello")
+        # mock_anthropic_client patches anthropic.Anthropic — called when provider=anthropic
+        assert mock_anthropic_client.messages.create.called
+
+    def test_bedrock_provider_uses_bedrock_client(self, monkeypatch):
+        """When LLM_PROVIDER=bedrock, use anthropic.AnthropicBedrock."""
+        from unittest.mock import MagicMock, patch
+        monkeypatch.setenv("LLM_PROVIDER", "bedrock")
+        monkeypatch.setenv("AWS_REGION", "eu-west-3")
+
+        with patch("src.llm_router.anthropic.AnthropicBedrock") as MockBedrock:
+            client = MagicMock()
+            response = MagicMock()
+            response.usage.input_tokens = 5
+            response.usage.output_tokens = 10
+            block = MagicMock()
+            block.type = "text"
+            block.text = '{"ok": true}'
+            response.content = [block]
+            client.messages.create.return_value = response
+            MockBedrock.return_value = client
+
+            router = LLMRouter("test-agent")
+            router.call("hello")
+
+            MockBedrock.assert_called_once_with(aws_region="eu-west-3")
+            assert client.messages.create.called
+
+    def test_bedrock_default_region_eu_west_3(self, monkeypatch):
+        """Bedrock defaults to eu-west-3 when AWS_REGION not set."""
+        from unittest.mock import MagicMock, patch
+        monkeypatch.setenv("LLM_PROVIDER", "bedrock")
+        monkeypatch.delenv("AWS_REGION", raising=False)
+
+        with patch("src.llm_router.anthropic.AnthropicBedrock") as MockBedrock:
+            client = MagicMock()
+            response = MagicMock()
+            response.usage.input_tokens = 1
+            response.usage.output_tokens = 1
+            block = MagicMock()
+            block.type = "text"
+            block.text = "{}"
+            response.content = [block]
+            client.messages.create.return_value = response
+            MockBedrock.return_value = client
+
+            router = LLMRouter("test-agent")
+            router.call("hello")
+
+            MockBedrock.assert_called_once_with(aws_region="eu-west-3")
+
+    def test_model_override_via_env(self, monkeypatch, mock_anthropic_client):
+        """LLM_MODEL_FAST env var overrides the fast tier model ID."""
+        monkeypatch.setenv("LLM_MODEL_FAST", "eu.anthropic.claude-haiku-4-5-20251022-v1:0")
+        router = LLMRouter("test-agent", default_tier="fast")
+        router.call("hello")
+        call_kwargs = mock_anthropic_client.messages.create.call_args[1]
+        assert call_kwargs["model"] == "eu.anthropic.claude-haiku-4-5-20251022-v1:0"

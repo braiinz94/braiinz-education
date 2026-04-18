@@ -1,9 +1,21 @@
-"""LLMRouter — point d'entrée unique pour tous les appels LLM (3 tiers)."""
+"""LLMRouter — point d'entree unique pour tous les appels LLM (3 tiers).
+
+Provider switchable via LLM_PROVIDER env var :
+  - "anthropic" (defaut) : API Anthropic directe (US, via DPF + SCC).
+  - "bedrock"            : AWS Bedrock (region AWS_REGION, defaut eu-west-3).
+                           Recommande pour conformite Schrems II (donnees UE).
+
+Model IDs peuvent etre override par tier :
+  LLM_MODEL_FAST, LLM_MODEL_STANDARD, LLM_MODEL_DEEP
+(utile sur Bedrock ou les IDs sont differents, e.g. inference profiles
+ "eu.anthropic.claude-haiku-4-5-YYYYMMDD-v1:0").
+"""
 
 from __future__ import annotations
 
 import json
 import logging
+import os
 
 import anthropic
 
@@ -26,6 +38,39 @@ TIER_CONFIG: dict[str, dict] = {
         "cost_eur_per_1k": {"input": 0.005, "output": 0.025},
     },
 }
+
+# Env-driven per-tier model override (useful for Bedrock, where IDs differ)
+_TIER_ENV_OVERRIDE = {
+    "fast": "LLM_MODEL_FAST",
+    "standard": "LLM_MODEL_STANDARD",
+    "deep": "LLM_MODEL_DEEP",
+}
+
+
+def _resolve_model(tier: str) -> str:
+    """Return the model ID for a tier, honoring env overrides."""
+    env_key = _TIER_ENV_OVERRIDE.get(tier)
+    if env_key:
+        override = os.environ.get(env_key)
+        if override:
+            return override
+    return TIER_CONFIG[tier]["model"]
+
+
+def _make_client():
+    """Factory for the Anthropic client, switching on LLM_PROVIDER env var.
+
+    Returns either anthropic.Anthropic() (default, direct API) or
+    anthropic.AnthropicBedrock() (AWS Bedrock, region eu-west-3 by default).
+
+    For tests: tests patch `src.llm_router.anthropic.Anthropic` — the default
+    branch calls anthropic.Anthropic() directly, keeping mocks compatible.
+    """
+    provider = os.environ.get("LLM_PROVIDER", "anthropic").lower()
+    if provider == "bedrock":
+        region = os.environ.get("AWS_REGION", "eu-west-3")
+        return anthropic.AnthropicBedrock(aws_region=region)
+    return anthropic.Anthropic()
 
 
 class LLMRouter:
@@ -88,14 +133,14 @@ class LLMRouter:
 
         config = TIER_CONFIG[effective_tier]
         kwargs: dict = {
-            "model": config["model"],
+            "model": _resolve_model(effective_tier),
             "max_tokens": max_tokens if max_tokens is not None else config["max_tokens"],
             "messages": [{"role": "user", "content": prompt}],
         }
         if system is not None:
             kwargs["system"] = system
 
-        client = anthropic.Anthropic()
+        client = _make_client()
         response = client.messages.create(**kwargs)
 
         # Track usage
