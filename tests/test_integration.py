@@ -35,8 +35,12 @@ class TestFullFlow:
         # 4. Assert mastery levels
         equations_mastery = student.competencies["nombres.equations"]["mastery"]
         puissances_mastery = student.competencies["nombres.puissances"]["mastery"]
-        assert equations_mastery > 0.3, f"equations mastery should be > 0.3, got {equations_mastery}"
-        assert puissances_mastery < 0.3, f"puissances mastery should be < 0.3, got {puissances_mastery}"
+        assert equations_mastery > 0.3, (
+            f"equations mastery should be > 0.3, got {equations_mastery}"
+        )
+        assert puissances_mastery < 0.3, (
+            f"puissances mastery should be < 0.3, got {puissances_mastery}"
+        )
 
         # 5. TuteurSocratique phase determination
         tuteur = TuteurSocratique()
@@ -118,10 +122,11 @@ class TestGuardrailsInterception:
     def test_coach_blocks_sensitive(self) -> None:
         """CoachPratique.process() returns a neutral response for religious content."""
         from src.agents.coach_pratique import CoachPratique
+
         coach = CoachPratique()
         student = self._make_student()
         result = coach.process(student, "L'islam est meilleur")
         result_lower = result.lower()
-        assert "respect" in result_lower or "croyance" in result_lower or "neutre" in result_lower, (
-            f"Expected neutral response, got: {result}"
-        )
+        assert (
+            "respect" in result_lower or "croyance" in result_lower or "neutre" in result_lower
+        ), f"Expected neutral response, got: {result}"

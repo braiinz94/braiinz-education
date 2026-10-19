@@ -78,9 +78,7 @@ class LLMRouter:
 
     def __init__(self, agent_id: str, *, default_tier: str = "fast") -> None:
         if default_tier not in TIER_CONFIG:
-            raise ValueError(
-                f"Invalid tier '{default_tier}'. Must be one of {list(TIER_CONFIG)}"
-            )
+            raise ValueError(f"Invalid tier '{default_tier}'. Must be one of {list(TIER_CONFIG)}")
         self._agent_id = agent_id
         self._default_tier = default_tier
         self._total_tokens_in: int = 0
@@ -127,9 +125,7 @@ class LLMRouter:
         """Call the LLM and return parsed JSON (dict) or raw text (str)."""
         effective_tier = tier if tier is not None else self._default_tier
         if effective_tier not in TIER_CONFIG:
-            raise ValueError(
-                f"Invalid tier '{effective_tier}'. Must be one of {list(TIER_CONFIG)}"
-            )
+            raise ValueError(f"Invalid tier '{effective_tier}'. Must be one of {list(TIER_CONFIG)}")
 
         config = TIER_CONFIG[effective_tier]
         kwargs: dict = {
@@ -157,9 +153,7 @@ class LLMRouter:
         try:
             return json.loads(text)
         except (json.JSONDecodeError, ValueError):
-            logger.warning(
-                "LLMRouter[%s]: failed to parse JSON response: %r", self._agent_id, text
-            )
+            logger.warning("LLMRouter[%s]: failed to parse JSON response: %r", self._agent_id, text)
             return {}
 
     # ------------------------------------------------------------------

@@ -70,7 +70,9 @@ class ProfileManager:
         """Atomic write via tmp file + os.replace."""
         target = self._path(profile.student_id)
         tmp = target.with_suffix(".tmp")
-        tmp.write_text(json.dumps(profile.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.write_text(
+            json.dumps(profile.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         os.replace(tmp, target)
 
     def load(self, student_id: str) -> StudentProfile | None:

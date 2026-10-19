@@ -114,14 +114,24 @@ def test_interleave_shuffles_competencies() -> None:
     deck = FlashcardDeck(student_id="s3")
     # 3 cards from comp A, 3 from comp B — all due
     for i in range(3):
-        deck.add_card(Flashcard(
-            card_id=f"a{i}", competency_id="comp_a",
-            question=f"Q{i}", answer="A", next_review=_past(),
-        ))
-        deck.add_card(Flashcard(
-            card_id=f"b{i}", competency_id="comp_b",
-            question=f"Q{i}", answer="A", next_review=_past(),
-        ))
+        deck.add_card(
+            Flashcard(
+                card_id=f"a{i}",
+                competency_id="comp_a",
+                question=f"Q{i}",
+                answer="A",
+                next_review=_past(),
+            )
+        )
+        deck.add_card(
+            Flashcard(
+                card_id=f"b{i}",
+                competency_id="comp_b",
+                question=f"Q{i}",
+                answer="A",
+                next_review=_past(),
+            )
+        )
 
     # Without interleave
     regular = deck.get_due_cards(interleave=False)
@@ -134,8 +144,13 @@ def test_interleave_shuffles_competencies() -> None:
 
 def test_review_card_updates_review_count() -> None:
     deck = FlashcardDeck(student_id="s3")
-    card = Flashcard(card_id="c1", competency_id="nombres.equations", question="Q", answer="A",
-                     next_review=_past())
+    card = Flashcard(
+        card_id="c1",
+        competency_id="nombres.equations",
+        question="Q",
+        answer="A",
+        next_review=_past(),
+    )
     deck.add_card(card)
     deck.review_card("c1", rating=3)
     assert deck.cards[0].review_count == 1
@@ -144,8 +159,13 @@ def test_review_card_updates_review_count() -> None:
 def test_review_card_pushes_next_review() -> None:
     deck = FlashcardDeck(student_id="s3")
     now = datetime.now(UTC)
-    card = Flashcard(card_id="c1", competency_id="nombres.equations", question="Q", answer="A",
-                     next_review=_past())
+    card = Flashcard(
+        card_id="c1",
+        competency_id="nombres.equations",
+        question="Q",
+        answer="A",
+        next_review=_past(),
+    )
     deck.add_card(card)
     deck.review_card("c1", rating=4)  # rating 4 => interval *= 2.5, min 7 days
     assert deck.cards[0].next_review > now

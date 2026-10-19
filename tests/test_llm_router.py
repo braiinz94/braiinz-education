@@ -105,6 +105,7 @@ class TestProviderSwitching:
     def test_bedrock_provider_uses_bedrock_client(self, monkeypatch):
         """When LLM_PROVIDER=bedrock, use anthropic.AnthropicBedrock."""
         from unittest.mock import MagicMock, patch
+
         monkeypatch.setenv("LLM_PROVIDER", "bedrock")
         monkeypatch.setenv("AWS_REGION", "eu-west-3")
 
@@ -129,6 +130,7 @@ class TestProviderSwitching:
     def test_bedrock_default_region_eu_west_3(self, monkeypatch):
         """Bedrock defaults to eu-west-3 when AWS_REGION not set."""
         from unittest.mock import MagicMock, patch
+
         monkeypatch.setenv("LLM_PROVIDER", "bedrock")
         monkeypatch.delenv("AWS_REGION", raising=False)
 
