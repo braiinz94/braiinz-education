@@ -51,7 +51,9 @@ def test_correct_answer_updates_mastery_up(agent: Diagnostiqueur, student: Stude
     assert result["new_mastery"] > 0.5
 
 
-def test_incorrect_answer_updates_mastery_down(agent: Diagnostiqueur, student: StudentProfile) -> None:
+def test_incorrect_answer_updates_mastery_down(
+    agent: Diagnostiqueur, student: StudentProfile
+) -> None:
     student.update_competency("nombres.equations", mastery=0.5, pisa_level=3)
     result = agent.evaluate_answer(student, "nombres.equations", is_correct=False)
     assert result["new_mastery"] < 0.5
@@ -76,15 +78,18 @@ def test_new_competency_starts_at_0_3(agent: Diagnostiqueur, student: StudentPro
     assert result["new_mastery"] > 0.3
 
 
-@pytest.mark.parametrize("mastery,expected_pisa", [
-    (0.0, 1),
-    (0.15, 1),
-    (0.25, 2),
-    (0.45, 3),
-    (0.65, 4),
-    (0.80, 5),
-    (0.95, 6),
-])
+@pytest.mark.parametrize(
+    "mastery,expected_pisa",
+    [
+        (0.0, 1),
+        (0.15, 1),
+        (0.25, 2),
+        (0.45, 3),
+        (0.65, 4),
+        (0.80, 5),
+        (0.95, 6),
+    ],
+)
 def test_mastery_to_pisa_level(agent: Diagnostiqueur, mastery: float, expected_pisa: int) -> None:
     assert agent.mastery_to_pisa(mastery) == expected_pisa
 
@@ -95,6 +100,6 @@ def test_run_returns_competency_map(agent: Diagnostiqueur, student: StudentProfi
     # Should have all competencies from the "nombres" chapter
     assert "nombres.ensembles" in result
     assert "nombres.equations" in result
-    for comp_id, info in result.items():
+    for _comp_id, info in result.items():
         assert "mastery" in info
         assert "pisa_level" in info

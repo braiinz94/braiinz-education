@@ -20,8 +20,7 @@ class CurriculumLoader:
         path = self._pack_path(country, subject, level)
         if not path.exists():
             raise FileNotFoundError(
-                f"Curriculum pack not found: {path.name}. "
-                f"Available packs are in {_BUILTIN_DIR}"
+                f"Curriculum pack not found: {path.name}. Available packs are in {_BUILTIN_DIR}"
             )
         return json.loads(path.read_text(encoding="utf-8"))
 

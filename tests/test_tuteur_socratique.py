@@ -66,7 +66,9 @@ def test_context_includes_phase(agent: TuteurSocratique, student: StudentProfile
     assert "approfondissement" in ctx.lower()
 
 
-def test_context_includes_zpd_for_scaffolding(agent: TuteurSocratique, student: StudentProfile) -> None:
+def test_context_includes_zpd_for_scaffolding(
+    agent: TuteurSocratique, student: StudentProfile
+) -> None:
     # Student has mastery=0.3 on fonctions.affines — in ZPD (<0.5)
     ctx = agent.build_context(student, "fonctions.affines", Phase.SURVOL)
     # Context should mention ZPD or scaffolding opportunity

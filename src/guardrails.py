@@ -59,8 +59,7 @@ _CATEGORIES: dict[str, list[str]] = {
 
 # Pre-compile patterns for performance
 _COMPILED: dict[str, list[re.Pattern[str]]] = {
-    cat: [re.compile(kw, re.IGNORECASE) for kw in kws]
-    for cat, kws in _CATEGORIES.items()
+    cat: [re.compile(kw, re.IGNORECASE) for kw in kws] for cat, kws in _CATEGORIES.items()
 }
 
 _NEUTRAL_RESPONSES: dict[str, str] = {

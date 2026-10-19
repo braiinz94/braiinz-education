@@ -25,6 +25,7 @@ _MIN_INTERVALS: dict[int, float] = {1: 0.01, 2: 1.0, 3: 3.0, 4: 7.0}
 @dataclass
 class Flashcard:
     """A single spaced-repetition flashcard."""
+
     card_id: str
     competency_id: str
     question: str
@@ -109,6 +110,7 @@ class FlashcardDeck:
         tmp = path.with_suffix(".tmp")
         tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         import os
+
         os.replace(tmp, path)
 
     @classmethod

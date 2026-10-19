@@ -33,7 +33,7 @@ LEVELS: dict[str, str] = {
 def _level_keyboard() -> InlineKeyboardMarkup:
     """Build the inline keyboard for level selection (2 columns)."""
     buttons = [InlineKeyboardButton(label, callback_data=key) for key, label in LEVELS.items()]
-    rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows = [buttons[i : i + 2] for i in range(0, len(buttons), 2)]
     return InlineKeyboardMarkup(rows)
 
 

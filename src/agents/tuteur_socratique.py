@@ -11,6 +11,7 @@ from src.student_profile import StudentProfile
 
 class Phase(Enum):
     """Ibn Khaldun 3 passes — progression pedagogique."""
+
     SURVOL = "survol"
     APPROFONDISSEMENT = "approfondissement"
     MAITRISE = "maitrise"
@@ -76,7 +77,11 @@ class TuteurSocratique(BaseEducAgent):
             system=system,
             response_format="text",
         )
-        return str(result) if result else "Hmm, je n'ai pas de reponse a te proposer. Reformule ta question ?"
+        return (
+            str(result)
+            if result
+            else "Hmm, je n'ai pas de reponse a te proposer. Reformule ta question ?"
+        )
 
     def determine_phase(self, mastery: float) -> Phase:
         """Determine the pedagogical phase from the mastery level."""

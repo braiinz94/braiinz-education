@@ -1,5 +1,6 @@
 # Braiinz Education
 
+[![CI](https://github.com/braiinz94/braiinz-education/actions/workflows/ci.yml/badge.svg)](https://github.com/braiinz94/braiinz-education/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)
 ![Code style](https://img.shields.io/badge/lint-ruff-000000.svg)
