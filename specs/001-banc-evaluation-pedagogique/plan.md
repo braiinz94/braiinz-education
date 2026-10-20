@@ -119,7 +119,7 @@ L'élève fictif est un `StudentProfile` construit à partir de `niveau` (et d'u
 
 Une étape ajoutée au flux existant : `python -m src.evals valider` puis `python -m src.evals executer --config actuelle --rejouer`, sans secret. Les tests `tests/evals/` tournent avec le reste de pytest.
 
-## Points à acter par le mainteneur
+## Points actés par le mainteneur (2026-10-20)
 
 1. **Multi-tours reporté** (D11) : la spec prévoyait « quelques échanges par situation » ; les agents ne gèrent pas d'historique, donc une situation = un message dans cette version.
 2. **Coach et Diagnostiqueur déterministes** : le banc les mesure tels quels ; la comparaison de modèles ne les concerne pas tant qu'ils n'appellent pas le modèle. Le banc devrait d'ailleurs révéler un défaut connu : `generate_question` plafonne le niveau de Bloom à 4.
