@@ -116,6 +116,7 @@ class Execution:
     scores: dict[str, dict[str, ScoreCritere]]
     cout_estime: Cout
     cout_reel_eur: float
+    source: str = "api"
 
 
 @dataclass(frozen=True)

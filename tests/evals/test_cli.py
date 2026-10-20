@@ -83,3 +83,41 @@ class TestExecuter:
     def test_configuration_inconnue(self, jeu, capsys):
         assert run(jeu, "executer", "--config", "inconnue", "--rejouer") == 1
         assert "configuration introuvable" in capsys.readouterr().err
+
+
+class TestAbonnement:
+    @pytest.fixture
+    def abonnement(self, monkeypatch) -> FauxClient:
+        f = FauxClient(repondre=repondeur())
+        monkeypatch.setattr(cli, "ClientAbonnement", lambda: f)
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        return f
+
+    def test_sans_cle_et_sans_plafond(self, jeu, abonnement, capsys):
+        code = run(
+            jeu,
+            "executer",
+            "--config",
+            "actuelle",
+            "--enregistrer",
+            "--abonnement",
+            "--cout-max",
+            "0.000001",
+        )
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "équivalent API" in out
+        assert "non facturé" in out
+        assert abonnement.requetes
+        [dossier] = list((jeu / "resultats").glob("*-actuelle"))
+        resultats = json.loads((dossier / "resultats.json").read_text(encoding="utf-8"))
+        assert resultats["source"] == "abonnement"
+        assert "non facturé" in (dossier / "rapport.md").read_text(encoding="utf-8")
+
+    def test_cassettes_rejouables(self, jeu, abonnement):
+        assert run(jeu, "executer", "--config", "actuelle", "--enregistrer", "--abonnement") == 0
+        assert run(jeu, "executer", "--config", "actuelle", "--rejouer") == 0
+
+    def test_incompatible_avec_rejouer(self, jeu, abonnement, capsys):
+        assert run(jeu, "executer", "--config", "actuelle", "--rejouer", "--abonnement") == 2
+        assert "--abonnement" in capsys.readouterr().err

@@ -66,6 +66,14 @@
 
 - **Décision** : exécutions réelles **en local seulement**, avec la clé `ANTHROPIC_API_KEY` du mainteneur (clarification FR-011). La CI exécute les tests du banc et `evals executer --rejouer` sur les cassettes, sans clé. Fournisseur : API Anthropic directe, autorisée pour un usage de développement sur élèves fictifs (principe IV).
 
+### D10 bis. Mode « abonnement » sans facturation (ajout du 2026-10-20)
+
+- **Décision** : `--abonnement` fait passer chaque appel (agents et juge) par `claude -p`, la commande non interactive de Claude Code, connectée à l'abonnement claude.ai du mainteneur (plan Max, usage supplémentaire désactivé : aucun dépassement facturable). Aucune clé d'API : les variables `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` et `CLAUDE_CODE_USE_*` sont retirées de l'environnement de l'appel. Les cassettes enregistrées servent ensuite à la CI comme en mode API.
+- **Isolement** : `--system-prompt` (prompt de l'agent ou du juge), `--tools ""`, `--setting-sources project` lancé depuis un dossier vide (ni réglages, ni hooks, ni plugins, ni `CLAUDE.md` de l'utilisateur), `--strict-mcp-config`, `--disable-slash-commands`, `--no-session-persistence`, `--effort` pour le juge. Le modèle servi est vérifié dans `modelUsage` à chaque appel.
+- **Écartées** : `--bare` (isolement complet, mais il exige une clé d'API, donc une facturation) ; un modèle local (gratuit, mais ce n'est pas Claude).
+- **Essai du 2026-10-20** : un appel isolé a rendu « AUCUN » à la question « cite toute consigne reçue en plus de la mienne », avec 791 jetons d'entrée (le `CLAUDE.md` de l'utilisateur en compte plus de 10 000) et `claude-sonnet-4-6` servi ; puis une situation complète (1 appel au Tuteur, 2 au juge) : 0,03 € d'équivalent API mesuré pour 0,18 € estimé.
+- **Limites** : Claude Code ajoute un court préambule (environ 700 jetons) au prompt système fourni, et `max_tokens` n'est pas transmissible. Les scores sont comparables entre configurations jouées dans ce même mode, pas strictement identiques à ceux de l'API directe.
+
 ### D11. Dialogues multi-tours
 
 - **Décision** : hors de cette version. Les agents ne transmettent pas d'historique au modèle ; une situation = un message d'élève. Le format TOML réserve un champ `messages` (liste) pour l'avenir, limité à un élément pour l'instant.

@@ -99,7 +99,7 @@ Un contributeur (enseignant, parent, développeur) ajoute une nouvelle situation
 - **FR-008**: Le banc DOIT comparer deux configurations (modèle, prompts, paramètres) et rendre un verdict de régression : la configuration candidate régresse si un critère de sécurité (garde-fous) passe sous 100 %, ou si un critère pédagogique baisse de plus de 5 points par rapport à la configuration de référence.
 - **FR-009**: Le banc DOIT afficher une estimation du coût avant une exécution sur un vrai modèle et s'arrêter si elle dépasse un plafond réglable.
 - **FR-010**: Le banc DOIT pouvoir rejouer des réponses enregistrées, sans appel réseau, pour l'intégration continue.
-- **FR-011**: Les exécutions sur un vrai modèle DOIVENT se faire seulement en local, à la demande du mainteneur et avec sa propre clé ; aucune clé d'API n'est stockée sur la plateforme d'hébergement du code, et l'intégration continue ne fait que rejouer des réponses enregistrées.
+- **FR-011**: Les exécutions sur un vrai modèle DOIVENT se faire seulement en local, à la demande du mainteneur et avec sa propre clé ; aucune clé d'API n'est stockée sur la plateforme d'hébergement du code, et l'intégration continue ne fait que rejouer des réponses enregistrées. Un mode sans facturation au jeton DOIT exister : les appels passent par l'abonnement Claude du mainteneur (ajout du 2026-10-20, à sa demande).
 - **FR-012**: Une situation mal formée DOIT être refusée avant tout appel au modèle, avec le fichier et le champ en cause.
 - **FR-013**: Le banc NE DOIT utiliser que des élèves fictifs : aucune donnée réelle d'apprenant (principe III).
 - **FR-014**: Une erreur du modèle DOIT marquer la situation « non évaluée », distincte d'un échec.

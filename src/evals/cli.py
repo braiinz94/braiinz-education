@@ -14,7 +14,7 @@ from src.evals.chargement import (
     charger_juge,
     charger_situations,
 )
-from src.evals.client import CassetteManquante
+from src.evals.client import CassetteManquante, ClientAbonnement
 from src.evals.cout import PlafondDepasse
 from src.evals.criteres import CRITERES
 from src.evals.execution import executer
@@ -68,8 +68,12 @@ def cmd_valider(args: argparse.Namespace) -> int:
 def cmd_executer(args: argparse.Namespace) -> int:
     racine = Path(args.racine)
     mode = "rejoue" if args.rejouer else "enregistrer" if args.enregistrer else "reel"
+    if args.abonnement and mode == "rejoue":
+        print("erreur : --abonnement ne se combine pas avec --rejouer", file=sys.stderr)
+        return REFUS
     fournisseur = os.environ.get("LLM_PROVIDER", "anthropic").lower()
-    if mode != "rejoue" and fournisseur != "bedrock" and not os.environ.get("ANTHROPIC_API_KEY"):
+    cle_requise = mode != "rejoue" and not args.abonnement and fournisseur != "bedrock"
+    if cle_requise and not os.environ.get("ANTHROPIC_API_KEY"):
         print(
             "erreur : ANTHROPIC_API_KEY absente — une exécution réelle utilise votre clé, en local "
             "(ou utilisez --rejouer)",
@@ -78,11 +82,18 @@ def cmd_executer(args: argparse.Namespace) -> int:
         return REFUS
 
     def annoncer(c: Cout) -> None:
-        print(
-            f"coût estimé : {c.eur:.2f} € ({c.appels_agents} appels à l'agent, {c.appels_juge} au juge, "
-            f"{args.repetitions} répétition(s)) · plafond {args.cout_max:.2f} €",
-            flush=True,
-        )
+        appels = f"{c.appels_agents} appels à l'agent, {c.appels_juge} au juge, {args.repetitions} répétition(s)"
+        if args.abonnement:
+            print(
+                f"coût équivalent API estimé : {c.eur:.2f} € ({appels}) — non facturé : "
+                "abonnement claude.ai via claude -p, décompté du quota",
+                flush=True,
+            )
+        else:
+            print(
+                f"coût estimé : {c.eur:.2f} € ({appels}) · plafond {args.cout_max:.2f} €",
+                flush=True,
+            )
 
     try:
         x = executer(
@@ -93,8 +104,11 @@ def cmd_executer(args: argparse.Namespace) -> int:
             cout_max=args.cout_max,
             agent=args.agent,
             situation=args.situation,
-            client_reel=lambda: default_client(),
+            client_reel=(lambda: ClientAbonnement())
+            if args.abonnement
+            else (lambda: default_client()),
             annoncer=annoncer,
+            facture=not args.abonnement,
         )
     except ErreurValidation as e:
         return _erreurs(e)
@@ -106,7 +120,8 @@ def cmd_executer(args: argparse.Namespace) -> int:
         return CASSETTE
     dossier = ecrire_execution(racine, x)
     non_evalues = sum(e.statut != "evalue" for e in x.essais)
-    print(f"{len(x.essais)} essais · {non_evalues} non évalués · coût réel {x.cout_reel_eur:.2f} €")
+    libelle = "équivalent API mesuré (non facturé)" if args.abonnement else "coût réel"
+    print(f"{len(x.essais)} essais · {non_evalues} non évalués · {libelle} {x.cout_reel_eur:.2f} €")
     print(f"rapport : {dossier / 'rapport.md'}")
     return OK
 
@@ -161,6 +176,11 @@ def construire_parseur() -> argparse.ArgumentParser:
         "--enregistrer", action="store_true", help="exécution réelle qui écrit les cassettes"
     )
     modes.add_argument("--rejouer", action="store_true", help="rejoue les cassettes, sans réseau")
+    e.add_argument(
+        "--abonnement",
+        action="store_true",
+        help="appels via claude -p sur l'abonnement claude.ai, sans clé d'API ni facturation au jeton",
+    )
     e.add_argument("--agent", choices=AGENTS)
     e.add_argument("--situation")
     racine(e)

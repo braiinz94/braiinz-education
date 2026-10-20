@@ -121,3 +121,108 @@ class ClientRejoueur(_AvecCassettes):
             )
         c = json.loads(chemin.read_text(encoding="utf-8"))["reponse"]
         return reponse_texte(c["texte"], c["jetons_entree"], c["jetons_sortie"])
+
+
+class ErreurAbonnement(Exception):
+    """L'appel par `claude -p` a échoué (quota atteint, modèle servi inattendu, sortie illisible)."""
+
+
+# Variables qui feraient passer `claude -p` sur une facturation à l'API ou sur un autre fournisseur.
+_VARIABLES_RETIREES = (
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL",
+    "CLAUDE_CODE_USE_BEDROCK",
+    "CLAUDE_CODE_USE_VERTEX",
+    "CLAUDE_CODE_USE_FOUNDRY",
+)
+
+
+class ClientAbonnement(_Client):
+    """Envoie chaque requête à `claude -p`, sur l'abonnement claude.ai du mainteneur.
+
+    Aucune clé d'API : rien n'est facturé au jeton, l'appel est décompté du quota de
+    l'abonnement. Isolé : aucun outil, aucun serveur MCP, ni réglages, ni hooks, ni plugins
+    de l'utilisateur, lancé depuis un dossier vide. `max_tokens` n'est pas transmis
+    (le CLI ne l'expose pas).
+    """
+
+    def __init__(
+        self,
+        *,
+        executable: str = "claude",
+        lanceur: Callable[..., Any] | None = None,
+        dossier: Path | None = None,
+        delai_s: int = 600,
+    ) -> None:
+        import subprocess
+        import tempfile
+
+        self.executable = executable
+        self.lanceur = lanceur or subprocess.run
+        self.dossier = (
+            Path(dossier) if dossier else Path(tempfile.mkdtemp(prefix="banc-abonnement-"))
+        )
+        self.delai_s = delai_s
+
+    def commande(self, kwargs: dict[str, Any]) -> list[str]:
+        cmd = [
+            self.executable,
+            "-p",
+            "--model",
+            str(kwargs["model"]),
+            "--system-prompt",
+            str(kwargs.get("system") or ""),
+            "--output-format",
+            "json",
+            "--tools",
+            "",
+            "--setting-sources",
+            "project",
+            "--strict-mcp-config",
+            "--disable-slash-commands",
+            "--no-session-persistence",
+        ]
+        effort = (kwargs.get("output_config") or {}).get("effort")
+        if effort:
+            cmd += ["--effort", str(effort)]
+        return cmd
+
+    def create(self, **kwargs: Any) -> Any:
+        import os
+
+        messages = kwargs.get("messages") or []
+        if len(messages) != 1 or messages[0].get("role") != "user":
+            raise ValueError(
+                "le mode abonnement n'accepte qu'un seul message utilisateur par requête"
+            )
+        env = {k: v for k, v in os.environ.items() if k not in _VARIABLES_RETIREES}
+        r = self.lanceur(
+            self.commande(kwargs),
+            input=str(messages[0]["content"]),
+            capture_output=True,
+            text=True,
+            env=env,
+            cwd=str(self.dossier),
+            timeout=self.delai_s,
+        )
+        try:
+            sortie = json.loads(r.stdout)
+        except (json.JSONDecodeError, TypeError) as exc:
+            raise ErreurAbonnement(
+                f"sortie de claude -p illisible : {(r.stderr or r.stdout)[:200]!r}"
+            ) from exc
+        if r.returncode != 0 or sortie.get("is_error"):
+            raise ErreurAbonnement(f"claude -p a échoué : {str(sortie.get('result'))[:300]}")
+        servis = list((sortie.get("modelUsage") or {}).keys())
+        if kwargs["model"] not in servis:
+            raise ErreurAbonnement(
+                f"modèle servi {', '.join(servis) or 'inconnu'} au lieu de {kwargs['model']}"
+            )
+        u = sortie.get("usage") or {}
+        entree = (
+            int(u.get("input_tokens", 0))
+            + int(u.get("cache_read_input_tokens", 0))
+            + int(u.get("cache_creation_input_tokens", 0))
+        )
+        return reponse_texte(str(sortie.get("result", "")), entree, int(u.get("output_tokens", 0)))

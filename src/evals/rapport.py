@@ -31,6 +31,15 @@ def _extrait(texte: str) -> str:
     return t if len(t) <= EXTRAIT_MAX else t[: EXTRAIT_MAX - 1] + "…"
 
 
+def _ligne_cout(x: Execution) -> str:
+    if x.source == "abonnement":
+        return (
+            f"- Coût : équivalent API estimé {x.cout_estime.eur:.2f} €, mesuré {x.cout_reel_eur:.2f} € "
+            "— non facturé (abonnement claude.ai via claude -p, décompté du quota)"
+        )
+    return f"- Coût : estimé {x.cout_estime.eur:.2f} €, réel {x.cout_reel_eur:.2f} €"
+
+
 def rapport_markdown(x: Execution) -> str:
     lignes = [
         f"# Banc d'évaluation pédagogique — configuration « {x.configuration} »",
@@ -40,7 +49,7 @@ def rapport_markdown(x: Execution) -> str:
         "- Modèles : " + ", ".join(f"{k} = `{v}`" for k, v in x.modeles.items()),
         f"- Appels : {sum(e.appels_modele for e in x.essais)} à l'agent (estimés : {x.cout_estime.appels_agents}),"
         f" {x.cout_estime.appels_juge} au juge (estimés)",
-        f"- Coût : estimé {x.cout_estime.eur:.2f} €, réel {x.cout_reel_eur:.2f} €",
+        _ligne_cout(x),
         f"- Essais non évalués (erreur du modèle) : {sum(e.statut != 'evalue' for e in x.essais)}",
         "",
     ]

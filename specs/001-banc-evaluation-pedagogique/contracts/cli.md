@@ -10,7 +10,8 @@ python -m src.evals executer --config actuelle [--repetitions 3] [--cout-max 5] 
 
 - Valide toutes les situations, puis affiche le coût estimé ; s'arrête (code 2) s'il dépasse `--cout-max`.
 - `--enregistrer` : exécution réelle qui écrit les cassettes. `--rejouer` : aucune requête réseau ; code 3 si une cassette manque.
-- Sans `--rejouer`, exige `ANTHROPIC_API_KEY` (code 2 sinon, avant tout appel).
+- Sans `--rejouer`, exige `ANTHROPIC_API_KEY` (code 2 sinon, avant tout appel), sauf avec `--abonnement`.
+- `--abonnement` : appels via `claude -p` sur l'abonnement claude.ai, sans clé ni plafond (rien n'est facturé) ; incompatible avec `--rejouer` (code 2).
 - Écrit `evals/resultats/<horodatage>-<config>/rapport.md` et `resultats.json`.
 - Code 0 si l'exécution s'est terminée, quels que soient les scores.
 

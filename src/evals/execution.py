@@ -171,6 +171,7 @@ def executer(
     client_reel: Callable[[], Any] = default_client,
     annoncer: Callable[[Cout], None] | None = None,
     maintenant: datetime | None = None,
+    facture: bool = True,
 ) -> Execution:
     """Valide tout, estime le coût (plafond si appels réels), puis joue le jeu de situations."""
     if mode not in MODES:
@@ -195,7 +196,7 @@ def executer(
     )
     if annoncer is not None:
         annoncer(estimation)
-    if mode != "rejoue":
+    if mode != "rejoue" and facture:
         verifier_plafond(estimation.eur, cout_max)
 
     base = _client_de_base(mode, racine, configuration, client_reel)
@@ -265,4 +266,5 @@ def executer(
         scores=calculer_scores(essais),
         cout_estime=estimation,
         cout_reel_eur=round(cout_reel, 4),
+        source="api" if facture or mode == "rejoue" else "abonnement",
     )
