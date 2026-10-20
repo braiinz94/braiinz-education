@@ -15,6 +15,8 @@ _BLOOM_TEMPLATES: dict[int, str] = {
     2: "Donne un exemple concret de {title}.",
     3: "Resous cet exercice sur {title} : ...",
     4: "Explique pourquoi cette methode fonctionne pour {title}.",
+    5: "Compare deux methodes pour {title} et justifie laquelle tu choisirais.",
+    6: "Invente un exercice sur {title}, puis redige sa solution.",
 }
 
 
@@ -51,10 +53,10 @@ class Diagnostiqueur(BaseEducAgent):
         comp = self._loader.get_competency("fr", "maths", "seconde", competency_id)
         title = comp["title"] if comp else competency_id
 
-        # Use bloom level template (cap at 4 for static templates)
-        effective_level = min(bloom_level, 4)
-        template = _BLOOM_TEMPLATES.get(effective_level, _BLOOM_TEMPLATES[4])
-        question = template.format(title=title)
+        # Un modèle de phrase par niveau de Bloom (1 = mémoriser … 6 = créer).
+        if bloom_level not in _BLOOM_TEMPLATES:
+            raise ValueError(f"niveau de Bloom {bloom_level} hors de 1 à 6")
+        question = _BLOOM_TEMPLATES[bloom_level].format(title=title)
 
         return {
             "competency_id": competency_id,

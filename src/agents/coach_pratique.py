@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import random
+import re
+import unicodedata
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -126,6 +128,23 @@ class FlashcardDeck:
         return deck
 
 
+# Découragement exprimé par l'élève (accents et casse ignorés). Révélé par le banc
+# d'évaluation : le Coach répondait par sa phrase d'accueil, sans le reconnaître.
+_DECOURAGEMENT = re.compile(
+    r"sert a rien|(j'?y )?arriverai jamais|je suis (nul|nulle|trop bete)\b|j'?abandonne"
+    r"|trop dur|je comprends rien|j'?ai (tout )?rate|rate (toutes|tous|tout)|je n'?y arrive pas"
+)
+
+
+def _sans_accents(texte: str) -> str:
+    t = unicodedata.normalize("NFKD", texte.casefold())
+    return "".join(c for c in t if not unicodedata.combining(c)).replace("’", "'")
+
+
+def est_decourage(message: str) -> bool:
+    return bool(_DECOURAGEMENT.search(_sans_accents(message)))
+
+
 class CoachPratique(BaseEducAgent):
     """Coach pratique : flashcards FSRS avec repetition espacee et interleaving."""
 
@@ -151,6 +170,14 @@ class CoachPratique(BaseEducAgent):
         )
 
     def handle(self, student: StudentProfile, user_message: str) -> str:
+        if est_decourage(user_message):
+            return (
+                f"[Coach Pratique] Je t'entends, {student.display_name} : quand ça bloque, c'est "
+                "frustrant. C'est aussi tout à fait normal — la répétition espacée marche justement "
+                "en revoyant ce qu'on n'a pas encore retenu, et chaque carte ratée revient plus tôt "
+                "pour que tu progresses. On reprend en douceur : lance /flashcards et fais seulement "
+                "5 cartes aujourd'hui. Note-toi honnêtement de 1 à 4, je m'occupe du reste."
+            )
         return (
             f"[Coach Pratique] Pret pour ta session de flashcards, {student.display_name} ! "
             f"Utilise /flashcards pour commencer."

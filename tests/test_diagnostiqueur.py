@@ -103,3 +103,19 @@ def test_run_returns_competency_map(agent: Diagnostiqueur, student: StudentProfi
     for _comp_id, info in result.items():
         assert "mastery" in info
         assert "pisa_level" in info
+
+
+def test_niveaux_bloom_5_et_6_ne_sont_plus_plafonnes(agent: Diagnostiqueur) -> None:
+    # Révélé par le banc d'évaluation (2026-10-20) : 5 et 6 reprenaient la question du niveau 4.
+    questions = {
+        lvl: agent.generate_question("nombres.equations", bloom_level=lvl)["question"]
+        for lvl in range(1, 7)
+    }
+    assert len(set(questions.values())) == 6
+    assert any(m in questions[5].lower() for m in ("compare", "justifie", "évalue"))
+    assert any(m in questions[6].lower() for m in ("invente", "conçois", "crée"))
+
+
+def test_niveau_bloom_hors_bornes_refuse(agent: Diagnostiqueur) -> None:
+    with pytest.raises(ValueError):
+        agent.generate_question("nombres.equations", bloom_level=7)
