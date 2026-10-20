@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -56,17 +57,25 @@ class _Client:
 
 
 class ClientCompteur(_Client):
-    def __init__(self, interne: Any) -> None:
+    """`tarif(requete)` rend le coût en euros d'un appel à partir de ses jetons (facultatif)."""
+
+    def __init__(
+        self, interne: Any, tarif: Callable[[dict[str, Any], int, int], float] | None = None
+    ) -> None:
         self.interne = interne
+        self.tarif = tarif
         self.appels = 0
         self.jetons_entree = 0
         self.jetons_sortie = 0
+        self.eur = 0.0
 
     def create(self, **kwargs: Any) -> Any:
         self.appels += 1
         r = self.interne.messages.create(**kwargs)
         self.jetons_entree += r.usage.input_tokens
         self.jetons_sortie += r.usage.output_tokens
+        if self.tarif is not None:
+            self.eur += self.tarif(kwargs, r.usage.input_tokens, r.usage.output_tokens)
         return r
 
 
