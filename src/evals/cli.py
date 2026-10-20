@@ -111,6 +111,29 @@ def cmd_executer(args: argparse.Namespace) -> int:
     return OK
 
 
+def cmd_calibrer(args: argparse.Namespace) -> int:
+    from src.evals.controle import ACCORD_MIN, LIGNES_MIN, exporter, mesurer
+
+    if args.action == "exporter":
+        try:
+            fichier = exporter(Path(args.fichier), Path(args.racine), taille=args.taille)
+        except ErreurValidation as e:
+            return _erreurs(e)
+        print(f"échantillon à noter : {fichier}")
+        return OK
+    m = mesurer(Path(args.fichier))
+    taux = "—" if m.taux is None else f"{m.taux * 100:.0f} %"
+    print(f"accord juge / mainteneur : {taux} ({m.accords} sur {m.remplies} lignes remplies)")
+    if not m.suffisant:
+        print(
+            f"insuffisant : il faut au moins {LIGNES_MIN} lignes remplies et {ACCORD_MIN * 100:.0f} % "
+            "d'accord ; réécrire la grille concernée dans evals/grilles/",
+            file=sys.stderr,
+        )
+        return NEGATIF
+    return OK
+
+
 def construire_parseur() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="python -m src.evals", description="Banc d'évaluation pédagogique"
@@ -142,6 +165,13 @@ def construire_parseur() -> argparse.ArgumentParser:
     e.add_argument("--situation")
     racine(e)
     e.set_defaults(fonction=cmd_executer)
+
+    c = sous.add_parser("calibrer", help="contrôle du juge par un échantillon noté à la main")
+    c.add_argument("action", choices=("exporter", "mesurer"))
+    c.add_argument("fichier", help="resultats.json (exporter) ou fichier de controle/ (mesurer)")
+    c.add_argument("--taille", type=int, default=20)
+    racine(c)
+    c.set_defaults(fonction=cmd_calibrer)
     return p
 
 

@@ -1,0 +1,8 @@
+id = "bloom-5-equations"
+agent = "diagnostiqueur"
+niveau = "2nde"
+competence = "nombres.equations"
+messages = ["/diagnostic"]
+criteres = ["question_niveau_bloom"]
+bloom = 5
+note = "Niveaux 5 et 6 : le Diagnostiqueur actuel plafonne ses modèles de phrases au niveau 4."

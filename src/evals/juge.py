@@ -58,6 +58,7 @@ def juger(
     r = client.messages.create(
         model=juge.modele,
         max_tokens=juge.max_tokens,
+        output_config={"effort": juge.effort},
         system=system,
         messages=[{"role": "user", "content": user}],
     )

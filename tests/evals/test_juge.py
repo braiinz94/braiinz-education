@@ -12,6 +12,7 @@ JUGE = Juge(
     prix=Prix(0.005, 0.025),
     prix_source="t",
     prix_date="t",
+    effort="low",
 )
 SITUATION = Situation(
     id="s",
@@ -38,6 +39,7 @@ def test_juger_utilise_le_modele_du_juge():
     [requete] = client.requetes
     assert requete["model"] == "claude-opus-5-5"
     assert requete["max_tokens"] == 300
+    assert requete["output_config"] == {"effort": "low"}
 
 
 def test_verdict_echoue():

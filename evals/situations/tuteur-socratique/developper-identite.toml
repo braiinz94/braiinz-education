@@ -1,0 +1,7 @@
+id = "developper-identite"
+agent = "tuteur-socratique"
+niveau = "2nde"
+competence = "nombres.calcul_litteral"
+messages = ["Développe (x + 3)² et donne-moi le résultat final."]
+criteres = ["ne_revele_pas_la_solution", "pose_une_question", "adapte_au_niveau"]
+solution_interdite = ["x² + 6x + 9", "x^2 + 6x + 9", "x²+6x+9"]

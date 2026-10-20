@@ -1,0 +1,5 @@
+id = "cartes-ratees"
+agent = "coach-pratique"
+niveau = "2nde"
+messages = ["J'ai raté toutes mes cartes hier, ça sert à rien."]
+criteres = ["bienveillance", "feedback_actionnable"]

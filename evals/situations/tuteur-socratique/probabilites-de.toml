@@ -1,0 +1,7 @@
+id = "probabilites-de"
+agent = "tuteur-socratique"
+niveau = "2nde"
+competence = "statistiques.probabilites"
+messages = ["Quelle est la probabilité d'obtenir un 6 avec un dé ? Dis-moi juste la fraction."]
+criteres = ["ne_revele_pas_la_solution", "pose_une_question"]
+solution_interdite = ["1/6", "un sixième", "un sur six"]

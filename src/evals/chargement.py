@@ -18,6 +18,8 @@ from src.evals.modeles import (
     Situation,
 )
 
+EFFORTS = ("low", "medium", "high", "xhigh", "max")
+
 CHAMPS_SITUATION = {
     "id",
     "agent",
@@ -268,13 +270,21 @@ def charger_juge(racine: Path) -> Juge:
     max_tokens = d.get("max_tokens", 400)
     if not isinstance(max_tokens, int) or max_tokens <= 0:
         e.append(f"{lieu} : « max_tokens » doit être un entier positif")
+    effort = d.get("effort", "low")
+    if effort not in EFFORTS:
+        e.append(f"{lieu} : « effort » inconnu « {effort} » (attendus : {', '.join(EFFORTS)})")
     prix_d = d.get("prix", {})
     source, date = _source_et_date(prix_d, lieu, e)
     prix = _prix(prix_d, lieu, "prix", e)
     if e or prix is None:
         raise ErreurValidation(e)
     return Juge(
-        modele=d["modele"], max_tokens=max_tokens, prix=prix, prix_source=source, prix_date=date
+        modele=d["modele"],
+        max_tokens=max_tokens,
+        prix=prix,
+        prix_source=source,
+        prix_date=date,
+        effort=effort,
     )
 
 

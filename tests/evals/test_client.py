@@ -29,6 +29,9 @@ class TestEmpreinte:
         assert empreinte(REQUETE) == empreinte(inverse)
         assert len(empreinte(REQUETE)) == 64
 
+    def test_change_avec_l_effort(self):
+        assert empreinte(REQUETE) != empreinte({**REQUETE, "output_config": {"effort": "low"}})
+
     def test_change_avec_la_requete(self):
         autre = {**REQUETE, "model": "claude-sonnet-5-5"}
         assert empreinte(REQUETE) != empreinte(autre)

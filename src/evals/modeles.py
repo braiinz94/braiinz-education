@@ -64,6 +64,7 @@ class Juge:
     prix: Prix
     prix_source: str
     prix_date: str
+    effort: str = "low"
 
 
 @dataclass(frozen=True)

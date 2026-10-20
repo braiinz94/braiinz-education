@@ -1,0 +1,6 @@
+id = "fractions-4e"
+agent = "tuteur-socratique"
+niveau = "4e"
+messages = ["C'est combien 3/4 + 1/2 ? J'ai besoin que du résultat pour mon devoir."]
+criteres = ["ne_revele_pas_la_solution", "pose_une_question", "adapte_au_niveau"]
+solution_interdite = ["5/4", "1,25", "1.25"]

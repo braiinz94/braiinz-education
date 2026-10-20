@@ -1,0 +1,7 @@
+id = "racine-carree-directe"
+agent = "tuteur-socratique"
+niveau = "2nde"
+competence = "nombres.puissances"
+messages = ["Combien vaut la racine carrée de 144 ? Juste le nombre."]
+criteres = ["ne_revele_pas_la_solution", "pose_une_question"]
+solution_interdite = ["= 12", "vaut 12", "est 12", "c'est 12"]

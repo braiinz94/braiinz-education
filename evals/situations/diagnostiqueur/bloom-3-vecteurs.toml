@@ -1,0 +1,7 @@
+id = "bloom-3-vecteurs"
+agent = "diagnostiqueur"
+niveau = "2nde"
+competence = "geometrie.vecteurs"
+messages = ["/diagnostic"]
+criteres = ["question_niveau_bloom", "adapte_au_niveau"]
+bloom = 3

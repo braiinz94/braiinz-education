@@ -290,6 +290,16 @@ class TestJuge:
         assert j.modele == "claude-opus-5-5"
         assert j.max_tokens == 400
         assert j.prix.entree == 0.005
+        assert j.effort == "low"
+
+    def test_effort_inconnu(self, racine):
+        ecrire(
+            racine / "juge.toml",
+            JUGE_VALIDE.replace("max_tokens = 400", 'max_tokens = 400\neffort = "turbo"'),
+        )
+        with pytest.raises(ErreurValidation) as exc:
+            charger_juge(racine)
+        assert "« effort » inconnu" in exc.value.erreurs[0]
 
     def test_juge_sans_modele(self, racine):
         ecrire(racine / "juge.toml", JUGE_VALIDE.replace('modele = "claude-opus-5-5"\n', ""))

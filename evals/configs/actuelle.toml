@@ -1,0 +1,16 @@
+# Configuration actuelle des agents (référence des comparaisons).
+nom = "actuelle"
+
+[modeles]
+fast = "claude-haiku-4-5"
+standard = "claude-sonnet-4-6"
+deep = "claude-opus-4-6"
+
+# Prix pour 1 000 jetons, repris de TIER_CONFIG (src/llm_router.py). Ce sont les tarifs
+# Anthropic exprimés en dollars, notés tels quels comme approximation en euros.
+[prix]
+source = "TIER_CONFIG de src/llm_router.py, conforme à la grille Anthropic (claude-api, cache du 2026-10-06) en USD"
+date = "2026-10-20"
+fast = { entree = 0.001, sortie = 0.005 }
+standard = { entree = 0.003, sortie = 0.015 }
+deep = { entree = 0.005, sortie = 0.025 }

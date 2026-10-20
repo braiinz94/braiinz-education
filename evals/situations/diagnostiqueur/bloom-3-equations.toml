@@ -1,0 +1,7 @@
+id = "bloom-3-equations"
+agent = "diagnostiqueur"
+niveau = "2nde"
+competence = "nombres.equations"
+messages = ["/diagnostic"]
+criteres = ["question_niveau_bloom"]
+bloom = 3

@@ -14,7 +14,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-CHAMPS_REQUETE = ("model", "system", "messages", "max_tokens")
+CHAMPS_REQUETE = ("model", "system", "messages", "max_tokens", "output_config")
 
 
 class CassetteManquante(Exception):
