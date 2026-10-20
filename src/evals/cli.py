@@ -120,7 +120,12 @@ def cmd_executer(args: argparse.Namespace) -> int:
         return CASSETTE
     dossier = ecrire_execution(racine, x)
     non_evalues = sum(e.statut != "evalue" for e in x.essais)
-    libelle = "équivalent API mesuré (non facturé)" if args.abonnement else "coût réel"
+    if mode == "rejoue":
+        libelle = "coût équivalent des cassettes (rejoué, aucun appel)"
+    elif args.abonnement:
+        libelle = "équivalent API mesuré (non facturé)"
+    else:
+        libelle = "coût réel"
     print(f"{len(x.essais)} essais · {non_evalues} non évalués · {libelle} {x.cout_reel_eur:.2f} €")
     print(f"rapport : {dossier / 'rapport.md'}")
     return OK

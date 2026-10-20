@@ -32,6 +32,8 @@ def _extrait(texte: str) -> str:
 
 
 def _ligne_cout(x: Execution) -> str:
+    if x.mode == "rejoue":
+        return f"- Coût : aucun (rejoué depuis les cassettes, sans appel) ; équivalent des cassettes {x.cout_reel_eur:.2f} €"
     if x.source == "abonnement":
         return (
             f"- Coût : équivalent API estimé {x.cout_estime.eur:.2f} €, mesuré {x.cout_reel_eur:.2f} € "

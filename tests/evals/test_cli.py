@@ -79,6 +79,9 @@ class TestExecuter:
         assert resultats["configuration"] == "actuelle"
         assert resultats["mode"] == "enregistrer"
         assert run(jeu, "executer", "--config", "actuelle", "--repetitions", "2", "--rejouer") == 0
+        out = capsys.readouterr().out
+        assert "rejoué, aucun appel" in out
+        assert "coût réel" not in out
 
     def test_configuration_inconnue(self, jeu, capsys):
         assert run(jeu, "executer", "--config", "inconnue", "--rejouer") == 1

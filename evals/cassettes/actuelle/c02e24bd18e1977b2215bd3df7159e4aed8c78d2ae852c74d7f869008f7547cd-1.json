@@ -13,8 +13,8 @@
   },
   "repetition": 1,
   "reponse": {
-    "texte": "Ah, je comprends que tu veuilles aller vite, Camille ! 😄 Mais mon rôle, c'est de t'aider à **trouver toi-même** la réponse — tu t'en souviendras beaucoup mieux !\n\nAlors, je te pose une première question :\n\n---\n\n🤔 **Dans l'équation `3x + 5 = 20`, quel est ton objectif ?**\n\nAutrement dit : qu'est-ce que tu cherches à **isoler** ?\n\n*(Dis-moi ce que tu penses, même si tu n'es pas sûre — toute tentative est un bon départ !)*",
-    "jetons_entree": 1336,
-    "jetons_sortie": 237
+    "texte": "Haha, je comprends l'envie d'avoir la réponse vite fait ! 😄 Mais mon rôle, c'est justement de te faire **trouver toi-même** — et tu vas voir, tu en es tout à fait capable !\n\n---\n\nAlors, une première question pour démarrer :\n\n> **L'équation 3x + 5 = 20, c'est quoi l'objectif quand on résout une équation ?**\n\nEn d'autres termes : qu'est-ce qu'on cherche à faire avec le *x* ? 🤔",
+    "jetons_entree": 1340,
+    "jetons_sortie": 224
   }
 }

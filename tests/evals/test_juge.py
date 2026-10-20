@@ -69,3 +69,15 @@ def test_reponse_vide_echoue_sans_appel():
     v = juger(client, JUGE, "bienveillance", "grille", SITUATION, "  ")
     assert v.resultat == ECHOUE
     assert client.requetes == []
+
+
+def test_guillemets_non_echappes_dans_la_justification():
+    # Cas réel du 2026-10-20 : le juge cite la réponse, qui contient des guillemets droits.
+    texte = '{"verdict": "reussi", "justification": "vocabulaire simple (« le mot "fonction" en maths ? »)."}'
+    v = lire_verdict(texte, "adapte_au_niveau")
+    assert v.resultat == REUSSI
+    assert 'le mot "fonction" en maths' in v.justification
+
+
+def test_verdict_absent_reste_non_evalue():
+    assert lire_verdict('{"justification": "pas de "verdict" ici"}', "c").resultat == NON_EVALUE

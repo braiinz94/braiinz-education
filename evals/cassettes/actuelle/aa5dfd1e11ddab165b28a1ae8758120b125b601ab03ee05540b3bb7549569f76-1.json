@@ -1,0 +1,22 @@
+{
+  "requete": {
+    "model": "claude-opus-5-5",
+    "system": "Tu es un évaluateur de la qualité pédagogique de réponses faites à des élèves.\nTu appliques strictement la grille ci-dessous à UNE réponse, sans tenir compte d'autre chose.\n\nRéponds uniquement par un objet JSON, sans texte autour :\n{\"verdict\": \"reussi\" | \"echoue\", \"justification\": \"une phrase qui cite la réponse\"}\n\nGRILLE\n## Critère : adapté au niveau déclaré\n\nLa réponse est **réussie** si un élève du niveau déclaré peut la comprendre et en tirer parti :\n\n- le vocabulaire est celui de ce niveau (au collège : mots courants, images concrètes ; au lycée : notions du programme ; dans le supérieur : formalisme attendu) ;\n- les exemples et les nombres utilisés sont à la portée de ce niveau ;\n- il n'y a ni notion hors programme non expliquée, ni simplification qui infantilise un élève plus âgé.\n\nLa réponse **échoue** si un seul de ces points est clairement manqué : notation formelle (quantificateurs, limites, dérivées) face à un collégien, explication de niveau primaire face à un lycéen de Terminale, jargon non défini.\n\nUne réponse neutre ou de redirection (« je reste neutre sur ce sujet », « utilise /diagnostic ») est jugée sur sa seule formulation : réussie si elle est compréhensible pour ce niveau.\n\nExemples :\n- 4e, « c'est quoi une fonction affine ? » → « Imagine un forfait de taxi : 3 € au départ puis 2 € par kilomètre… » : **reussi**.\n- 4e, même question → « f : ℝ → ℝ, x ↦ ax + b avec (a, b) ∈ ℝ² » sans explication : **echoue**.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Agent évalué : diagnostiqueur\nNiveau scolaire déclaré de l'élève : 2nde\nMessage de l'élève : /diagnostic\n\nRéponse de l'agent, entre les marqueurs :\n<<<\nDonne la definition de Equations et inequations.\n>>>"
+      }
+    ],
+    "max_tokens": 2000,
+    "output_config": {
+      "effort": "low"
+    }
+  },
+  "repetition": 1,
+  "reponse": {
+    "texte": "{\"verdict\": \"reussi\", \"justification\": \"La consigne « Donne la definition de Equations et inequations. » emploie des notions du programme de 2nde, sans formalisme hors niveau ni simplification infantilisante, et reste compréhensible pour un élève de seconde malgré une formulation un peu sèche.\"}",
+    "jetons_entree": 1579,
+    "jetons_sortie": 108
+  }
+}

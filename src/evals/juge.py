@@ -31,6 +31,9 @@ def consigne_juge(grille: str, situation: Situation, reponse: str) -> tuple[str,
 
 
 _OBJET_JSON = re.compile(r"\{.*\}", re.DOTALL)
+# Repli quand le JSON est invalide (le juge cite souvent la réponse, guillemets droits compris).
+_VERDICT_SEUL = re.compile(r'"verdict"\s*:\s*"(reussi|echoue)"')
+_JUSTIFICATION_SEULE = re.compile(r'"justification"\s*:\s*"(.*)"\s*\}?\s*$', re.DOTALL)
 
 
 def lire_verdict(texte: str, critere: str) -> Verdict:
@@ -41,7 +44,11 @@ def lire_verdict(texte: str, critere: str) -> Verdict:
     except json.JSONDecodeError:
         donnees = None
     if not isinstance(donnees, dict):
-        return Verdict(critere, NON_EVALUE, f"réponse du juge illisible : {texte[:120]!r}")
+        v = _VERDICT_SEUL.search(texte)
+        if v is None:
+            return Verdict(critere, NON_EVALUE, f"réponse du juge illisible : {texte[:120]!r}")
+        j = _JUSTIFICATION_SEULE.search(texte)
+        return Verdict(critere, v.group(1), j.group(1) if j else "")
     verdict = donnees.get("verdict")
     if verdict not in (REUSSI, ECHOUE):
         return Verdict(critere, NON_EVALUE, f"verdict inconnu : {verdict!r}")
