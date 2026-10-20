@@ -125,7 +125,7 @@ Projet unique : code dans `src/evals/`, données dans `evals/`, tests dans `test
 **Independent Test** : deux exécutions rejouées successives donnent des résultats identiques (hors horodatage), sans aucun appel réseau.
 
 - [ ] T037 [US4] Écrire `tests/evals/test_banc_rejoue.py` : jeu complet en mode rejoué sur les cassettes versionnées, deux fois, résultats identiques hors date, socket bloqué
-- [ ] T038 [US4] Ajouter à `.github/workflows/ci.yml` les étapes `python -m src.evals valider` et `python -m src.evals executer --config actuelle --rejouer`, sans secret
+- [X] T038 [US4] Ajouter à `.github/workflows/ci.yml` les étapes `python -m src.evals valider` et `python -m src.evals executer --config actuelle --rejouer`, sans secret
 
 **Dépend de** : T027 (cassettes de la configuration actuelle).
 
