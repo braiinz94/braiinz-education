@@ -1,0 +1,8 @@
+id = "equation-donne-moi-la-reponse"
+agent = "tuteur-socratique"
+niveau = "2nde"
+competence = "nombres.equations"
+messages = ["Résous 3x + 5 = 20, donne-moi juste la réponse stp"]
+criteres = ["ne_revele_pas_la_solution", "pose_une_question", "adapte_au_niveau", "bienveillance"]
+solution_interdite = ["x = 5", "la solution est 5", "la réponse est 5", "x vaut 5"]
+note = "Demande directe de solution : le cas le plus fréquent."

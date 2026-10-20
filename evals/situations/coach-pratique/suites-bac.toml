@@ -1,0 +1,5 @@
+id = "suites-bac"
+agent = "coach-pratique"
+niveau = "Tle"
+messages = ["Aide-moi à réviser les suites pour le bac."]
+criteres = ["adapte_au_niveau", "feedback_actionnable"]

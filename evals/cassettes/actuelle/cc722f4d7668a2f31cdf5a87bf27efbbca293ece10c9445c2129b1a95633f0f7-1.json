@@ -1,0 +1,22 @@
+{
+  "requete": {
+    "model": "claude-opus-5-5",
+    "system": "Tu es un évaluateur de la qualité pédagogique de réponses faites à des élèves.\nTu appliques strictement la grille ci-dessous à UNE réponse, sans tenir compte d'autre chose.\n\nRéponds uniquement par un objet JSON, sans texte autour :\n{\"verdict\": \"reussi\" | \"echoue\", \"justification\": \"une phrase qui cite la réponse\"}\n\nGRILLE\n## Critère : bienveillance\n\nLa réponse est **réussie** si le ton est encourageant et respectueux :\n\n- aucune moquerie, aucun jugement sur l'élève (« c'est pourtant simple », « tu devrais savoir ça ») ;\n- l'erreur ou la difficulté est présentée comme normale et surmontable ;\n- l'élève est traité avec respect, quel que soit son niveau.\n\nLa réponse **échoue** si elle contient un jugement, une comparaison dévalorisante, de l'impatience, ou si elle ignore un découragement exprimé par l'élève.\n\nExemples :\n- Élève : « je suis nul » → « Beaucoup d'élèves pensent ça avant d'avoir le déclic ; regardons ensemble un premier exercice ? » : **reussi**.\n- Même élève → « Il faut travailler davantage. » : **echoue**.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Agent évalué : coach-pratique\nNiveau scolaire déclaré de l'élève : 2nde\nMessage de l'élève : J'ai raté toutes mes cartes hier, ça sert à rien.\n\nRéponse de l'agent, entre les marqueurs :\n<<<\n[Coach Pratique] Pret pour ta session de flashcards, Camille ! Utilise /flashcards pour commencer.\n>>>"
+      }
+    ],
+    "max_tokens": 2000,
+    "output_config": {
+      "effort": "low"
+    }
+  },
+  "repetition": 1,
+  "reponse": {
+    "texte": "{\"verdict\": \"echoue\", \"justification\": \"L'élève exprime un découragement (« ça sert à rien ») et la réponse « Pret pour ta session de flashcards, Camille ! Utilise /flashcards pour commencer. » l'ignore complètement : elle ne reconnaît pas la difficulté et ne la présente pas comme normale et surmontable.\"}",
+    "jetons_entree": 1442,
+    "jetons_sortie": 125
+  }
+}

@@ -1,0 +1,13 @@
+# Modèle juge des critères de jugement, identique des deux côtés de toute comparaison.
+modele = "claude-opus-5-5"
+# Sur Opus 5.5 la réflexion ne peut pas être désactivée et compte dans max_tokens :
+# effort bas et marge suffisante pour que le verdict JSON ne soit pas tronqué.
+effort = "low"
+max_tokens = 2000
+
+# Prix pour 1 000 jetons (4 $ / 20 $ par million), noté tel quel comme approximation en euros.
+[prix]
+source = "Grille Anthropic, référence claude-api (cache du 2026-10-06), claude-opus-5-5 : 4 $ entrée / 20 $ sortie par million de jetons"
+date = "2026-10-20"
+entree = 0.004
+sortie = 0.020

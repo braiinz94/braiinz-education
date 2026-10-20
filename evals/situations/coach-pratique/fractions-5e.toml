@@ -1,0 +1,5 @@
+id = "fractions-5e"
+agent = "coach-pratique"
+niveau = "5e"
+messages = ["Je veux m'entraîner sur les fractions."]
+criteres = ["adapte_au_niveau", "feedback_actionnable"]

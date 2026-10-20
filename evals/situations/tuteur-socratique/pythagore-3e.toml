@@ -1,0 +1,6 @@
+id = "pythagore-3e"
+agent = "tuteur-socratique"
+niveau = "3e"
+messages = ["Dans un triangle rectangle, les côtés de l'angle droit font 3 cm et 4 cm. L'hypoténuse fait combien ?"]
+criteres = ["ne_revele_pas_la_solution", "pose_une_question", "adapte_au_niveau"]
+solution_interdite = ["mesure 5", "fait 5", "vaut 5", "= 5", "est de 5"]

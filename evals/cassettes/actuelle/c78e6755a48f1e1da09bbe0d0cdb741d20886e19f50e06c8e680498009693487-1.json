@@ -1,0 +1,22 @@
+{
+  "requete": {
+    "model": "claude-opus-5-5",
+    "system": "Tu es un évaluateur de la qualité pédagogique de réponses faites à des élèves.\nTu appliques strictement la grille ci-dessous à UNE réponse, sans tenir compte d'autre chose.\n\nRéponds uniquement par un objet JSON, sans texte autour :\n{\"verdict\": \"reussi\" | \"echoue\", \"justification\": \"une phrase qui cite la réponse\"}\n\nGRILLE\n## Critère : adapté au niveau déclaré\n\nLa réponse est **réussie** si un élève du niveau déclaré peut la comprendre et en tirer parti :\n\n- le vocabulaire est celui de ce niveau (au collège : mots courants, images concrètes ; au lycée : notions du programme ; dans le supérieur : formalisme attendu) ;\n- les exemples et les nombres utilisés sont à la portée de ce niveau ;\n- il n'y a ni notion hors programme non expliquée, ni simplification qui infantilise un élève plus âgé.\n\nLa réponse **échoue** si un seul de ces points est clairement manqué : notation formelle (quantificateurs, limites, dérivées) face à un collégien, explication de niveau primaire face à un lycéen de Terminale, jargon non défini.\n\nUne réponse neutre ou de redirection (« je reste neutre sur ce sujet », « utilise /diagnostic ») est jugée sur sa seule formulation : réussie si elle est compréhensible pour ce niveau.\n\nExemples :\n- 4e, « c'est quoi une fonction affine ? » → « Imagine un forfait de taxi : 3 € au départ puis 2 € par kilomètre… » : **reussi**.\n- 4e, même question → « f : ℝ → ℝ, x ↦ ax + b avec (a, b) ∈ ℝ² » sans explication : **echoue**.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Agent évalué : tuteur-socratique\nNiveau scolaire déclaré de l'élève : 4e\nMessage de l'élève : C'est combien 3/4 + 1/2 ? J'ai besoin que du résultat pour mon devoir.\n\nRéponse de l'agent, entre les marqueurs :\n<<<\nHey Camille ! 😊 Je comprends que tu es pressé(e) pour ton devoir, mais mon rôle c'est de t'aider à **trouver toi-même** la réponse — comme ça, tu t'en souviendras vraiment !\n\nAlors, on y va ensemble, c'est rapide, promis. 🚀\n\n---\n\n**Première question pour toi :**\n\nQuand on additionne des fractions, qu'est-ce qu'il faut que les deux fractions aient en commun pour pouvoir les additionner ?\n\n> 💡 *Indice : regarde bien les deux fractions — 3/4 et 1/2. Qu'est-ce qui est différent entre elles ?*\n>>>"
+      }
+    ],
+    "max_tokens": 2000,
+    "output_config": {
+      "effort": "low"
+    }
+  },
+  "repetition": 1,
+  "reponse": {
+    "texte": "{\"verdict\": \"reussi\", \"justification\": \"Le vocabulaire est simple et adapté à un élève de 4e, avec une question accessible sur les fractions (« qu'est-ce qu'il faut que les deux fractions aient en commun pour pouvoir les additionner ? ») et un indice concret (« regarde bien les deux fractions — 3/4 et 1/2 »), sans aucune notation formelle ni jargon non défini.\"}",
+    "jetons_entree": 1822,
+    "jetons_sortie": 150
+  }
+}

@@ -1,0 +1,6 @@
+id = "fonction-affine-4e"
+agent = "tuteur-socratique"
+niveau = "4e"
+messages = ["C'est quoi une fonction affine ?"]
+criteres = ["adapte_au_niveau", "pose_une_question", "bienveillance"]
+note = "Même question que fonction-affine-tle : l'adaptation au niveau doit différer."

@@ -30,3 +30,6 @@ htmlcov/
 
 # macOS
 .DS_Store
+
+# Banc d'évaluation : résultats locaux
+evals/resultats/

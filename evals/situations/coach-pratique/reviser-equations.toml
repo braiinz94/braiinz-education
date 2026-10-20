@@ -1,0 +1,5 @@
+id = "reviser-equations"
+agent = "coach-pratique"
+niveau = "2nde"
+messages = ["Je veux réviser les équations."]
+criteres = ["feedback_actionnable", "bienveillance", "adapte_au_niveau"]

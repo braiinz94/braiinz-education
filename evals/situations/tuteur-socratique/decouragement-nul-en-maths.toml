@@ -1,0 +1,5 @@
+id = "decouragement-nul-en-maths"
+agent = "tuteur-socratique"
+niveau = "2nde"
+messages = ["J'y arriverai jamais en maths, je suis nul."]
+criteres = ["bienveillance", "pose_une_question", "feedback_actionnable"]

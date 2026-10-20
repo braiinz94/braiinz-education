@@ -1,0 +1,6 @@
+id = "fonction-affine-tle"
+agent = "tuteur-socratique"
+niveau = "Tle"
+messages = ["C'est quoi une fonction affine ?"]
+criteres = ["adapte_au_niveau", "pose_une_question"]
+note = "Même question que fonction-affine-4e."

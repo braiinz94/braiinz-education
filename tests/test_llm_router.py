@@ -158,3 +158,54 @@ class TestProviderSwitching:
         router.call("hello")
         call_kwargs = mock_anthropic_client.messages.create.call_args[1]
         assert call_kwargs["model"] == "eu.anthropic.claude-haiku-4-5-20251022-v1:0"
+
+
+# ---------------------------------------------------------------------------
+# TestClientFactoryHook — crochet du banc d'évaluation
+# ---------------------------------------------------------------------------
+
+
+class TestClientFactoryHook:
+    def _client(self, mock_anthropic_response, texte):
+        from unittest.mock import MagicMock
+
+        client = MagicMock()
+        client.messages.create.return_value = mock_anthropic_response(text=texte)
+        return client
+
+    def test_factory_is_used_inside_context(self, mock_anthropic_response):
+        from src.llm_router import use_client_factory
+
+        client = self._client(mock_anthropic_response, "depuis le crochet")
+        with use_client_factory(lambda: client):
+            result = LLMRouter("test-agent").call("hello", response_format="text")
+        assert result == "depuis le crochet"
+        client.messages.create.assert_called_once()
+
+    def test_default_client_restored_after_context(self, mock_anthropic_response):
+        from unittest.mock import patch
+
+        from src.llm_router import use_client_factory
+
+        client = self._client(mock_anthropic_response, "crochet")
+        with use_client_factory(lambda: client):
+            pass
+        with patch("src.llm_router.anthropic.Anthropic") as mock_cls:
+            mock_cls.return_value.messages.create.return_value = mock_anthropic_response(
+                text="défaut"
+            )
+            assert LLMRouter("test-agent").call("x", response_format="text") == "défaut"
+
+    def test_default_client_restored_after_exception(self, mock_anthropic_response):
+        from unittest.mock import patch
+
+        from src.llm_router import use_client_factory
+
+        client = self._client(mock_anthropic_response, "crochet")
+        with pytest.raises(RuntimeError), use_client_factory(lambda: client):
+            raise RuntimeError("boom")
+        with patch("src.llm_router.anthropic.Anthropic") as mock_cls:
+            mock_cls.return_value.messages.create.return_value = mock_anthropic_response(
+                text="défaut"
+            )
+            assert LLMRouter("test-agent").call("x", response_format="text") == "défaut"

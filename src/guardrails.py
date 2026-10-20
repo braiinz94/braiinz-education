@@ -13,8 +13,12 @@ _CATEGORIES: dict[str, list[str]] = {
         r"macron",
         r"m[eé]lenchon",
         r"le\s?pen",
-        r"gauche",
-        r"droite",
+        # « gauche » et « droite » seuls sont du vocabulaire de géométrie (droite (AB),
+        # à gauche de l'axe) : seules les tournures politiques sont retenues.
+        r"extr[eê]me[- ]?(gauche|droite)",
+        r"(?<!quation )(?<!quations )\b(de|à)\s+(gauche|droite)\b(?!\s+(de|du|des|d')\b)",
+        r"\b(gauche|droite)\s+ou\s+(de\s+|à\s+|la\s+)?(gauche|droite)\b",
+        r"\b(la|les)\s+(gauche|droite)s?\s+(a|ont|va|vont|veut|veulent|dit|disent|gagne\w*|perd\w*|propose\w*)\b",
         r"politique",
         r"gouvernement",
         r"ministre",
@@ -42,13 +46,24 @@ _CATEGORIES: dict[str, list[str]] = {
         r"plus envie de vivre",
         r"me faire du mal",
         r"personne ne m.aime",
-        r"harcel",
+        r"harc[eè]l",
         r"violence",
         r"maltraite",
+        r"plus envie de rien",
+        r"envie de dispara[iî]tre",
+        r"(veux|veut|voudrais|vais|envie d)\s*en finir",
+        r"\bje\s+(me\s+sens|suis)\s+inf[eé]rieur",
     ],
     "discrimination": [
         r"race sup[eé]rieure",
-        r"inf[eé]rieur",
+        # « inférieur » seul relève des inéquations (x inférieur à 7) : seul un groupe de
+        # personnes déclaré inférieur est retenu.
+        r"\b(filles?|femmes?|gar[cç]ons?|hommes?|noirs?|blancs?|arabes?|juifs?|musulmans?|chr[eé]tiens?|"
+        r"[eé]trangers?|immigr[eé]s?|races?|peuples?|ethnies?|handicap[eé]s?|homosexuel(le)?s?|gens)\b"
+        r"[^.?!\n]{0,40}\binf[eé]rieur",
+        # « Les X sont inférieurs », sauf comparaison mathématique (« inférieures à 5 », « à x »).
+        r"\b(sont|seraient|restent)\s+(naturellement\s+|vraiment\s+)?inf[eé]rieur(e)?s\b"
+        r"(?!\s+(à|a)\s+(\d|[a-z]\b))(?!\s+ou\s+[eé]gal)",
         r"homophobie",
         r"racisme",
         r"sexisme",
@@ -98,7 +113,9 @@ class Guardrails:
 
     def classify_sensitive(self, text: str) -> dict[str, object]:
         """Return {is_sensitive, category} for the first matching category, or None."""
-        for category, patterns in _COMPILED.items():
+        # La détresse passe en premier : elle l'emporte sur tout autre sujet du message.
+        for category in sorted(_COMPILED, key=lambda c: c != "detresse"):
+            patterns = _COMPILED[category]
             for pattern in patterns:
                 if pattern.search(text):
                     return {"is_sensitive": True, "category": category}

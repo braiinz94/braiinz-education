@@ -181,3 +181,46 @@ def test_save_and_load(tmp_data_dir: Path) -> None:
     assert len(loaded.cards) == 1
     assert loaded.cards[0].card_id == "c1"
     assert loaded.student_id == "s_save"
+
+
+class TestDecouragement:
+    """Révélé par le banc d'évaluation (2026-10-20) : le Coach ignorait le découragement."""
+
+    @pytest.fixture
+    def coach(self):
+        from src.agents.coach_pratique import CoachPratique
+
+        return CoachPratique()
+
+    @pytest.fixture
+    def eleve(self):
+        from src.student_profile import StudentProfile
+
+        return StudentProfile(student_id="t", display_name="Camille", level="2nde")
+
+    @pytest.mark.parametrize(
+        "message",
+        [
+            "J'ai raté toutes mes cartes hier, ça sert à rien.",
+            "j'y arriverai jamais",
+            "Je suis nulle, j'abandonne",
+            "c'est trop dur, je comprends rien",
+        ],
+    )
+    def test_decouragement_reconnu(self, coach, eleve, message):
+        r = coach.process(eleve, message)
+        assert "Pret pour ta session" not in r
+        assert "normal" in r.lower()
+        assert "/flashcards" in r
+        assert "Camille" in r
+
+    def test_sans_appel_au_modele(self, coach, eleve, monkeypatch):
+        def interdit(*a, **k):
+            raise AssertionError("le Coach ne doit pas appeler le modèle")
+
+        monkeypatch.setattr(coach.llm, "call", interdit)
+        coach.process(eleve, "ça sert à rien")
+
+    def test_message_ordinaire_inchange(self, coach, eleve):
+        r = coach.process(eleve, "Je veux réviser les équations.")
+        assert "Pret pour ta session de flashcards, Camille" in r
