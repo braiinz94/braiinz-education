@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 import logging
 import os
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 
 import anthropic
 
@@ -57,6 +59,26 @@ def _resolve_model(tier: str) -> str:
     return TIER_CONFIG[tier]["model"]
 
 
+# Fabrique de client imposée par le banc d'évaluation (src/evals) : None en usage normal.
+_client_factory: Callable[[], object] | None = None
+
+
+@contextmanager
+def use_client_factory(factory: Callable[[], object]) -> Iterator[None]:
+    """Fait utiliser `factory()` par tous les appels LLM du bloc, puis rétablit le client normal.
+
+    Sert au banc d'évaluation pour compter, enregistrer ou rejouer les appels sans
+    modifier les agents.
+    """
+    global _client_factory
+    precedent = _client_factory
+    _client_factory = factory
+    try:
+        yield
+    finally:
+        _client_factory = precedent
+
+
 def _make_client():
     """Factory for the Anthropic client, switching on LLM_PROVIDER env var.
 
@@ -66,6 +88,13 @@ def _make_client():
     For tests: tests patch `src.llm_router.anthropic.Anthropic` — the default
     branch calls anthropic.Anthropic() directly, keeping mocks compatible.
     """
+    if _client_factory is not None:
+        return _client_factory()
+    return default_client()
+
+
+def default_client():
+    """Client réel selon LLM_PROVIDER : Anthropic direct (défaut) ou AWS Bedrock."""
     provider = os.environ.get("LLM_PROVIDER", "anthropic").lower()
     if provider == "bedrock":
         region = os.environ.get("AWS_REGION", "eu-west-3")

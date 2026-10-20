@@ -23,7 +23,7 @@ L'apprenant final n'a jamais à payer pour apprendre. Aucune évolution ne DOIT 
 
 ### II. Neutralité et garde-fous non négociables
 
-Les agents ne donnent aucune opinion politique ou religieuse, ne relaient aucun contenu discriminatoire, et répondent à un message de détresse par un message de soutien et les numéros d'urgence (3114, Fil Santé Jeunes). Ces garde-fous s'appliquent avant tout appel au modèle. Un changement qui les touche DOIT les renforcer ou les laisser intacts, jamais les affaiblir, et DOIT être couvert par des tests pour chacune des quatre catégories.
+Les agents ne donnent aucune opinion politique ou religieuse, ne relaient aucun contenu discriminatoire, et répondent à un message de détresse par un message de soutien et les numéros d'aide gratuits (dont le 3114, numéro national de prévention du suicide). Ces garde-fous s'appliquent avant tout appel au modèle. Un changement qui les touche DOIT les renforcer ou les laisser intacts, jamais les affaiblir, et DOIT être couvert par des tests pour chacune des quatre catégories.
 
 *Raison :* le public comprend des mineurs ; une erreur sur ces sujets a des conséquences humaines, pas seulement techniques.
 
