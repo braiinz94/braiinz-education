@@ -1,6 +1,6 @@
 # Feature Specification: Banc d'évaluation pédagogique
 
-**Feature Branch**: `speckit/banc-evaluation`
+**Feature Branch**: `001-banc-evaluation-pedagogique`
 **Created**: 2026-10-20
 **Status**: Draft
 **Input**: User description: "Un banc d'essai qui note la qualité des réponses des 3 agents (socratique : ne donne pas la réponse, garde-fous, niveau). Prérequis pour passer ensuite aux modèles Claude 5.5 sans casser la pédagogie."
