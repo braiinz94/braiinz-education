@@ -26,9 +26,9 @@ Projet unique : code dans `src/evals/`, données dans `evals/`, tests dans `test
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Créer l'arborescence `evals/{configs/prompts,grilles,situations/tuteur-socratique,situations/coach-pratique,situations/diagnostiqueur,cassettes,controle}`, `src/evals/__init__.py`, `src/evals/__main__.py` (appelle `cli.main`) et ajouter `evals/resultats/` à `.gitignore`
-- [ ] T002 [P] Ajouter `evals/LICENSE` (texte CC-BY-SA 4.0 officiel) et un `evals/README.md` minimal (objet du dossier, licence)
-- [ ] T003 [P] Créer `tests/evals/__init__.py` et `tests/evals/conftest.py` : faux client Anthropic configurable (réponses par requête, jetons, erreur simulée), élève fictif `StudentProfile` par niveau, dossier `evals/` temporaire
+- [X] T001 Créer l'arborescence `evals/{configs/prompts,grilles,situations/tuteur-socratique,situations/coach-pratique,situations/diagnostiqueur,cassettes,controle}`, `src/evals/__init__.py`, `src/evals/__main__.py` (appelle `cli.main`) et ajouter `evals/resultats/` à `.gitignore`
+- [X] T002 [P] Ajouter `evals/LICENSE` (notice CC-BY-SA 4.0 renvoyant au texte officiel, sans téléchargement du texte intégral) et un `evals/README.md` minimal (objet du dossier, licence)
+- [X] T003 [P] Créer `tests/evals/__init__.py` et `tests/evals/conftest.py` : faux client Anthropic configurable (réponses par requête, jetons, erreur simulée), élève fictif `StudentProfile` par niveau, dossier `evals/` temporaire
 
 ---
 
@@ -36,13 +36,13 @@ Projet unique : code dans `src/evals/`, données dans `evals/`, tests dans `test
 
 **⚠️ CRITICAL** : aucun récit ne commence avant la fin de cette phase.
 
-- [ ] T004 Écrire les tests du crochet dans `tests/test_llm_router.py` : `use_client_factory(f)` fait utiliser `f()` par `LLMRouter.call`, le comportement par défaut revient à la sortie du contexte (même après une exception), les tests existants restent verts
-- [ ] T005 Implémenter `use_client_factory()` (gestionnaire de contexte) et sa prise en compte en tête de `_make_client()` dans `src/llm_router.py`
-- [ ] T006 [P] Implémenter les dataclasses figées `Situation`, `Critere`, `Configuration`, `Juge`, `Essai`, `Execution`, `LigneComparaison`, `Comparaison` dans `src/evals/modeles.py` (champs de data-model.md)
-- [ ] T007 Écrire `tests/evals/test_chargement.py` : situation valide ; `niveau` absent ; niveau inconnu ; critère inconnu ; `solution_interdite` manquante avec `ne_revele_pas_la_solution` ; `categorie_sensible` manquante avec `reponse_neutre_attendue` ; `bloom` hors 1–6 ; `id` ≠ nom de fichier ; `agent` ≠ dossier ; `messages` de longueur ≠ 1 ; configuration sans `prix.source` ou `prix.date` ; le message d'erreur cite le fichier et le champ
-- [ ] T008 Implémenter `src/evals/chargement.py` : lecture `tomllib` des situations, configurations et `juge.toml`, validation complète **avant** tout appel, erreurs regroupées (FR-012)
-- [ ] T009 Écrire `tests/evals/test_client.py` : le client compteur compte les appels ; l'enregistreur écrit une cassette nommée par le SHA-256 de la requête canonique (modèle, système, messages, max_tokens) ; le rejoueur sert la même réponse et lève `CassetteManquante` sinon ; aucun accès réseau (socket bloqué dans le test)
-- [ ] T010 Implémenter `src/evals/client.py` : clients compteur, enregistreur (enveloppe le vrai client) et rejoueur, au format de réponse attendu par `LLMRouter` (`content`, `usage`)
+- [X] T004 Écrire les tests du crochet dans `tests/test_llm_router.py` : `use_client_factory(f)` fait utiliser `f()` par `LLMRouter.call`, le comportement par défaut revient à la sortie du contexte (même après une exception), les tests existants restent verts
+- [X] T005 Implémenter `use_client_factory()` (gestionnaire de contexte) et sa prise en compte en tête de `_make_client()` dans `src/llm_router.py`
+- [X] T006 [P] Implémenter les dataclasses figées `Situation`, `Critere`, `Configuration`, `Juge`, `Essai`, `Execution`, `LigneComparaison`, `Comparaison` dans `src/evals/modeles.py` (champs de data-model.md)
+- [X] T007 Écrire `tests/evals/test_chargement.py` : situation valide ; `niveau` absent ; niveau inconnu ; critère inconnu ; `solution_interdite` manquante avec `ne_revele_pas_la_solution` ; `categorie_sensible` manquante avec `reponse_neutre_attendue` ; `bloom` hors 1–6 ; `id` ≠ nom de fichier ; `agent` ≠ dossier ; `messages` de longueur ≠ 1 ; configuration sans `prix.source` ou `prix.date` ; le message d'erreur cite le fichier et le champ
+- [X] T008 Implémenter `src/evals/chargement.py` : lecture `tomllib` des situations, configurations et `juge.toml`, validation complète **avant** tout appel, erreurs regroupées (FR-012)
+- [X] T009 Écrire `tests/evals/test_client.py` : le client compteur compte les appels ; l'enregistreur écrit une cassette nommée par le SHA-256 de la requête canonique (modèle, système, messages, max_tokens) ; le rejoueur sert la même réponse et lève `CassetteManquante` sinon ; aucun accès réseau (socket bloqué dans le test)
+- [X] T010 Implémenter `src/evals/client.py` : clients compteur, enregistreur (enveloppe le vrai client) et rejoueur, au format de réponse attendu par `LLMRouter` (`content`, `usage`)
 
 **Checkpoint** : on peut charger le jeu et intercepter tout appel au modèle.
 
@@ -56,31 +56,31 @@ Projet unique : code dans `src/evals/`, données dans `evals/`, tests dans `test
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T011 [P] [US1] Écrire `tests/evals/test_criteres.py` : chaque règle (`pose_une_question`, `ne_revele_pas_la_solution` avec normalisation casse, espaces et accents, `reponse_neutre_attendue`, `numeros_urgence`, `sans_appel_modele`, `question_niveau_bloom`) dans un cas réussi et un cas échoué ; réponse vide = échec ; registre : catégories `securite` exactement pour les 3 critères de sécurité
-- [ ] T012 [P] [US1] Écrire `tests/evals/test_juge.py` : la grille du critère est incluse dans la consigne ; verdict JSON `reussi`/`echoue` lu avec sa justification ; JSON invalide ou verdict inconnu = essai « non évalué » pour ce critère ; le modèle du juge vient de `juge.toml`
-- [ ] T013 [P] [US1] Écrire `tests/evals/test_scores.py` : taux de réussite sur les essais évalués ; les « non évalués » sont exclus du taux et comptés à part
-- [ ] T014 [P] [US1] Écrire `tests/evals/test_cout.py` : estimation (jetons d'entrée ≈ longueur/4, sortie = max_tokens, prix de la configuration et du juge) ; refus au-delà du plafond ; coût réel depuis les jetons rapportés
-- [ ] T015 [US1] Écrire `tests/evals/test_execution.py` : point d'entrée par agent (Tuteur et Coach via `process`, Diagnostiqueur via `process` pour les garde-fous et `generate_question` pour le niveau de Bloom) ; N répétitions ; erreur du modèle = « non évalué » ; message sensible = zéro appel compté ; remplacement des modèles par la configuration (`LLM_MODEL_*`) et du prompt système d'un agent
-- [ ] T016 [US1] Écrire `tests/evals/test_cli.py` (partie executer et valider) : code 2 si coût > plafond, code 2 sans `ANTHROPIC_API_KEY` hors rejeu, code 3 si cassette manquante, `valider` code 1 avec fichier et champ
+- [X] T011 [P] [US1] Écrire `tests/evals/test_criteres.py` : chaque règle (`pose_une_question`, `ne_revele_pas_la_solution` avec normalisation casse, espaces et accents, `reponse_neutre_attendue`, `numeros_urgence`, `sans_appel_modele`, `question_niveau_bloom`) dans un cas réussi et un cas échoué ; réponse vide = échec ; registre : catégories `securite` exactement pour les 3 critères de sécurité
+- [X] T012 [P] [US1] Écrire `tests/evals/test_juge.py` : la grille du critère est incluse dans la consigne ; verdict JSON `reussi`/`echoue` lu avec sa justification ; JSON invalide ou verdict inconnu = essai « non évalué » pour ce critère ; le modèle du juge vient de `juge.toml`
+- [X] T013 [P] [US1] Écrire `tests/evals/test_scores.py` : taux de réussite sur les essais évalués ; les « non évalués » sont exclus du taux et comptés à part
+- [X] T014 [P] [US1] Écrire `tests/evals/test_cout.py` : estimation (jetons d'entrée ≈ longueur/4, sortie = max_tokens, prix de la configuration et du juge) ; refus au-delà du plafond ; coût réel depuis les jetons rapportés
+- [X] T015 [US1] Écrire `tests/evals/test_execution.py` : point d'entrée par agent (Tuteur et Coach via `process`, Diagnostiqueur via `process` pour les garde-fous et `generate_question` pour le niveau de Bloom) ; N répétitions ; erreur du modèle = « non évalué » ; message sensible = zéro appel compté ; remplacement des modèles par la configuration (`LLM_MODEL_*`) et du prompt système d'un agent
+- [X] T016 [US1] Écrire `tests/evals/test_cli.py` (partie executer et valider) : code 2 si coût > plafond, code 2 sans `ANTHROPIC_API_KEY` hors rejeu, code 3 si cassette manquante, `valider` code 1 avec fichier et champ
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implémenter `src/evals/criteres.py` : registre des 9 critères et les 6 règles déterministes
-- [ ] T018 [US1] Implémenter `src/evals/juge.py` : consigne = grille + situation + réponse, appel via `LLMRouter` avec le modèle du juge, lecture du verdict JSON
-- [ ] T019 [P] [US1] Rédiger les grilles `evals/grilles/adapte_au_niveau.md`, `evals/grilles/feedback_actionnable.md`, `evals/grilles/bienveillance.md` (critères observables, exemples réussi et échoué, sortie JSON imposée)
-- [ ] T020 [US1] Implémenter le calcul des taux dans `src/evals/scores.py`
-- [ ] T021 [US1] Implémenter `src/evals/cout.py` (estimation, plafond, coût réel)
-- [ ] T022 [US1] Implémenter `src/evals/execution.py` : boucle situations × répétitions, application de la configuration, clients du crochet, appels au juge, construction de l'`Execution`
-- [ ] T023 [US1] Implémenter `src/evals/rapport.py` (`rapport.md` lisible, `resultats.json`, modèles exacts, appels, coût) avec un test de forme dans `tests/evals/test_rapport.py`
-- [ ] T024 [US1] Implémenter `src/evals/cli.py` : commandes `executer` et `valider`, options et codes de sortie de `contracts/cli.md`
-- [ ] T025 [P] [US1] Écrire `evals/configs/actuelle.toml` (Haiku 4.5, Sonnet 4.6, Opus 4.6, prix repris de `TIER_CONFIG` avec source et date) et `evals/juge.toml` (`claude-opus-5-5`, prix recopiés de la grille officielle d'Anthropic avec URL et date de lecture)
-- [ ] T026 [P] [US1] Écrire au moins 30 situations dans `evals/situations/` : ≥ 8 par agent, ≥ 2 par catégorie de garde-fou, demandes directes de solution, mêmes questions en 4e et en Terminale, niveaux de Bloom 1 à 6 pour le Diagnostiqueur, compétences du pack maths Seconde
+- [X] T017 [US1] Implémenter `src/evals/criteres.py` : registre des 9 critères et les 6 règles déterministes
+- [X] T018 [US1] Implémenter `src/evals/juge.py` : consigne = grille + situation + réponse, appel via `LLMRouter` avec le modèle du juge, lecture du verdict JSON
+- [X] T019 [P] [US1] Rédiger les grilles `evals/grilles/adapte_au_niveau.md`, `evals/grilles/feedback_actionnable.md`, `evals/grilles/bienveillance.md` (critères observables, exemples réussi et échoué, sortie JSON imposée)
+- [X] T020 [US1] Implémenter le calcul des taux dans `src/evals/scores.py`
+- [X] T021 [US1] Implémenter `src/evals/cout.py` (estimation, plafond, coût réel)
+- [X] T022 [US1] Implémenter `src/evals/execution.py` : boucle situations × répétitions, application de la configuration, clients du crochet, appels au juge, construction de l'`Execution`
+- [X] T023 [US1] Implémenter `src/evals/rapport.py` (`rapport.md` lisible, `resultats.json`, modèles exacts, appels, coût) avec un test de forme dans `tests/evals/test_rapport.py`
+- [X] T024 [US1] Implémenter `src/evals/cli.py` : commandes `executer` et `valider`, options et codes de sortie de `contracts/cli.md`
+- [X] T025 [P] [US1] Écrire `evals/configs/actuelle.toml` (Haiku 4.5, Sonnet 4.6, Opus 4.6, prix repris de `TIER_CONFIG` avec source et date) et `evals/juge.toml` (`claude-opus-5-5`, prix recopiés de la grille officielle d'Anthropic avec URL et date de lecture)
+- [X] T026 [P] [US1] Écrire au moins 30 situations dans `evals/situations/` : ≥ 8 par agent, ≥ 2 par catégorie de garde-fou, demandes directes de solution, mêmes questions en 4e et en Terminale, niveaux de Bloom 1 à 6 pour le Diagnostiqueur, compétences du pack maths Seconde
 - [ ] T027 [US1] (mainteneur) Exécution réelle locale `executer --config actuelle --repetitions 3 --enregistrer` après affichage du coût estimé et « oui » de Mourad ; relire le rapport ; commiter les cassettes `evals/cassettes/actuelle/`
 
 ### Contrôle du juge (FR-005, SC-007)
 
-- [ ] T028 [P] [US1] Écrire `tests/evals/test_controle.py` : export d'un échantillon tiré des essais notés par le juge ; taux d'accord ; code 1 sous 85 % ou avec moins de 20 lignes remplies
-- [ ] T029 [US1] Implémenter `src/evals/controle.py` et la commande `calibrer exporter|mesurer` dans `src/evals/cli.py`
+- [X] T028 [P] [US1] Écrire `tests/evals/test_controle.py` : export d'un échantillon tiré des essais notés par le juge ; taux d'accord ; code 1 sous 85 % ou avec moins de 20 lignes remplies
+- [X] T029 [US1] Implémenter `src/evals/controle.py` et la commande `calibrer exporter|mesurer` dans `src/evals/cli.py`
 - [ ] T030 [US1] (mainteneur) Noter 20 réponses dans `evals/controle/<horodatage>.toml`, mesurer l'accord, réécrire une grille si l'accord est sous 85 %
 
 **Checkpoint** : état des lieux complet de la configuration actuelle, juge contrôlé.
